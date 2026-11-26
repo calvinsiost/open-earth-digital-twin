@@ -24,12 +24,11 @@ Este catálogo reúne portais governamentais, agências ambientais oficiais e ob
 
 | Instituição / Fonte | Abrangência | Conjunto de Dados / Portal | URL Oficial (`https://`) | Licença e Nota de Atribuição |
 | --- | --- | --- | --- | --- |
-| **CETESB** | Brasil (SP) | Sistema QUALAR (estações automáticas e manuais de qualidade do ar) | `https://qualar.cetesb.sp.gov.br` | Dados públicos estaduais; citar CETESB/QUALAR, estação, poluente e janela temporal. |
-| **MMA / Rede MonitorAr** | Brasil | Plataforma Nacional de Monitoramento da Qualidade do Ar | `https://monitorar.mma.gov.br` | Dados públicos federais e estaduais integrados; citar MMA/MonitorAr e órgão estadual de origem. |
-| **OpenAQ** | Global | Plataforma Aberta Global de Dados de Qualidade do Ar | `https://openaq.org` | Agregador aberto (metadados abertos; conferir sempre a licença da agência de origem exibida no registro). |
+| **MMA / Rede MonitorAr** | Brasil | Plataforma Nacional de Monitoramento da Qualidade do Ar (acesso sem login) | `https://monitorar.mma.gov.br` | Dados públicos federais e estaduais integrados; citar MMA/MonitorAr e órgão estadual de origem. |
+| **OpenAQ Explorer** | Global | Plataforma Aberta Global de Dados de Qualidade do Ar (acesso sem login) | `https://explore.openaq.org` | Agregador aberto (metadados abertos; conferir sempre a licença da agência de origem exibida no registro). |
 | **US EPA** (Environmental Protection Agency) | EUA | AirData / Air Quality System (AQS) | `https://www.epa.gov/outdoor-air-quality-data` | U.S. Federal Public Domain (Domínio Público); citar US EPA AirData e identificador do monitor. |
 | **Copernicus (CAMS)** | Global / Europa | Copernicus Atmosphere Monitoring Service | `https://atmosphere.copernicus.eu` | Copernicus Free, Full and Open Data Policy (permite reuso comercial e científico mediante atribuição). |
-| **EEA** | Europa | European Air Quality Portal | `https://airindex.eea.europa.eu` | Política de Reuso da EEA / CC BY 4.0; citar EEA e rede nacional reportante. |
+| **EEA** | Europa | European Environment Agency — Air Pollution Portal | `https://www.eea.europa.eu/en/topics/in-depth/air-pollution` | Política de Reuso da EEA / CC BY 4.0; citar EEA e rede nacional reportante. *(Nota: o antigo host `airindex.eea.europa.eu` apresentou erro HTTP 502 e consta em `graveyard/index.json`.)* |
 
 ---
 
@@ -66,7 +65,7 @@ Este catálogo reúne portais governamentais, agências ambientais oficiais e ob
 | **INPE** | Brasil | PRODES e DETER (monitoramento oficial de desmatamento) | `https://terrabrasilis.dpi.inpe.br` | Dados públicos oficiais federais; citar INPE/PRODES ou INPE/DETER e ano-referência. |
 | **IBAMA** | Brasil | Portal de Dados Abertos (embargos públicos, unidades e fiscalização agregada) | `https://dadosabertos.ibama.gov.br` | Dados Abertos Governamentais (LAI); atenção para não incluir CPF/dados pessoais de autuados em contribuições. |
 | **SiBBr / ICMBio** | Brasil | Sistema de Informação sobre a Biodiversidade Brasileira | `https://www.sibbr.gov.br` | Selecionar apenas ocorrências/conjuntos sob `CC0` ou `CC BY 4.0` (evitar subconjuntos `CC BY-NC`). |
-| **GBIF** (Global Biodiversity Information Facility) | Global | Rede global de registros abertos de biodiversidade | `https://www.gbif.org` | Filtrar estritamente por licenças `CC0 1.0` ou `CC BY 4.0` (nunca incluir registros `CC BY-NC`); citar DOI do download GBIF. |
+| **GBIF** (Global Biodiversity Information Facility) | Global | API Pública v1 de registros abertos de biodiversidade | `https://api.gbif.org/v1/occurrence/search?limit=1` | Filtrar estritamente por licenças `CC0 1.0` ou `CC BY 4.0` (nunca incluir registros `CC BY-NC`); citar DOI do download GBIF. |
 | **Global Forest Watch (GFW)** | Global | Camadas abertas de cobertura arbórea e perda florestal | `https://www.globalforestwatch.org` | CC BY 4.0 para camadas abertas padrão (confirmar licença específica de cada camada antes do envio). |
 
 ---

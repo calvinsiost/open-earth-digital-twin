@@ -127,22 +127,22 @@
       "priority": 1,
       "country_iso2": "BR",
       "region": "Região Metropolitana de São Paulo e Manaus (AM), Brasil",
-      "title": "Estação Pública de Qualidade do Ar — São Paulo (QUALAR) ou Manaus (MonitorAr)",
+      "title": "Estação Pública de Qualidade do Ar — Rede MonitorAr / OpenAQ (Brasil)",
       "target_file": "contributions/BR/qualidade-ar-sp-manaus-publica.ecbt.json",
       "recommended_sources": [
-        {
-          "agency": "CETESB QUALAR",
-          "official_url": "https://qualar.cetesb.sp.gov.br",
-          "expected_license": "Dados Públicos Estaduais SP"
-        },
         {
           "agency": "MMA Rede MonitorAr",
           "official_url": "https://monitorar.mma.gov.br",
           "expected_license": "Dados Abertos Governamentais (LAI)"
+        },
+        {
+          "agency": "OpenAQ Explorer (Estações Públicas BR)",
+          "official_url": "https://explore.openaq.org",
+          "expected_license": "CC BY 4.0 / Dados Abertos (verificar licença da agência de origem)"
         }
       ],
       "expected_parameters": ["PM2.5 (µg/m³)", "PM10 (µg/m³)", "O3 (µg/m³)", "NO2 (µg/m³)"],
-      "notes": "Registrar coordenadas oficiais da estação e janela temporal UTC da média horária ou diária."
+      "notes": "Usar portais públicos sem exigência de login (MonitorAr ou OpenAQ). Endpoints históricos que exigem cadastro individual (como CETESB QUALAR) estão documentados em graveyard/index.json para evitar bloqueio de acesso."
     },
     {
       "gap_id": "GAP-AQ-002",
@@ -176,13 +176,13 @@
       "target_file": "contributions/GB/europe-london-air-quality-station.ecbt.json",
       "recommended_sources": [
         {
-          "agency": "EEA (European Air Quality Portal)",
-          "official_url": "https://airindex.eea.europa.eu",
+          "agency": "EEA (European Environment Agency — Air Pollution Portal)",
+          "official_url": "https://www.eea.europa.eu/en/topics/in-depth/air-pollution",
           "expected_license": "CC BY 4.0 (EEA Reuse Policy)"
         },
         {
-          "agency": "OpenAQ",
-          "official_url": "https://openaq.org",
+          "agency": "OpenAQ Explorer",
+          "official_url": "https://explore.openaq.org",
           "expected_license": "Open Government Licence (OGL) / CC BY 4.0"
         }
       ],
@@ -204,6 +204,11 @@
           "agency": "CETESB (Cadastro Público de Áreas Contaminadas)",
           "official_url": "https://cetesb.sp.gov.br/areas-contaminadas/",
           "expected_license": "Dados Públicos Estaduais SP (LAI)"
+        },
+        {
+          "agency": "IBAMA (Portal de Dados Abertos — Emergências e Áreas)",
+          "official_url": "https://dadosabertos.ibama.gov.br",
+          "expected_license": "Dados Abertos Governamentais (LAI / CC BY 4.0)"
         }
       ],
       "expected_parameters": ["Classificação pública de risco", "Grupo de contaminantes público", "Medida institucional pública"],
@@ -291,8 +296,8 @@
       "target_file": "contributions/DE/europe-copernicus-gbif-forest-baseline.ecbt.json",
       "recommended_sources": [
         {
-          "agency": "GBIF (Global Biodiversity Information Facility)",
-          "official_url": "https://www.gbif.org",
+          "agency": "GBIF Public API v1 (Global Biodiversity Information Facility)",
+          "official_url": "https://api.gbif.org/v1/occurrence/search?limit=1",
           "expected_license": "CC0 1.0 / CC BY 4.0 (strictly exclude CC BY-NC)"
         },
         {

@@ -17,21 +17,21 @@ O **Hall of Fame** reconhece publicamente os contribuidores cujos modelos ambien
 
 ---
 
-## Como Funciona o Certificado Digital Verificável (Selo QR)
+## Como Funciona o Certificado Digital Verificável (100% Gratuito)
 
-Cada certificado emitido em `https://ecbyts.com` apresenta um **Selo QR** de verificação pública que permite a universidades, empregadores, bancas e órgãos públicos confirmar de forma independente:
+Cada certificado emitido gratuitamente via `node tools/oedt.mjs cert <arquivo>` e ancorado neste repositório público (`https://github.com/calvinsiost/open-earth-digital-twin`) permite que universidades, empregadores, bancas e órgãos públicos confirmem de forma independente (sem qualquer pagamento de selo comercial de RT em `ecbyts.com`):
 
 1. Nome de exibição escolhido pelo contribuidor e identificador público do GitHub (`github_handle`).
 2. Nível de reconhecimento conquistado (`Explorador Ambiental`, `Cartógrafo de Dados Públicos`, `Guardião de Bacia/Bioma` ou `Embaixador Global`).
 3. Lista de identificadores das contribuições aprovadas (`contribution_id`) e respectivos domínios ambientais.
-4. Data de emissão e código criptográfico de conferência (ativo ou revogado em caso de remoção posterior por violação de regra).
+4. Data de emissão e código criptográfico SHA-256 de conferência verificável por qualquer pessoa rodando `node tools/oedt.mjs check <arquivo>`.
 
 ---
 
 ## Quadro Oficial de Contribuidores Reconhecidos
 
-> **Situação atual:** Repositório em fase de preparação local pré-lançamento. Os primeiros nomes reais serão registrados aqui exclusivamente após a abertura pública oficial e o *merge* dos primeiros Pull Requests validados.
+> **Situação atual:** Repositório público aberto em [github.com/calvinsiost/open-earth-digital-twin](https://github.com/calvinsiost/open-earth-digital-twin) aguardando os primeiros Pull Requests verificados (`checked`) integrados em `main`.
 
-| Contribuidor (`display_name`) | GitHub (`github_handle`) | País / Região | Nível Atual | Contribuições Aprovadas | Selo QR (`ecbyts.com`) |
+| Contribuidor (`display_name`) | GitHub (`github_handle`) | País / Região | Nível Atual | Contribuições Aprovadas | Certificado (`SHA-256`) |
 | --- | --- | --- | --- | --- | --- |
-| *(Aguardando primeiras contribuições públicas pós-abertura oficial)* | — | — | — | 0 | — |
+| *(Aguardando primeiras contribuições públicas verificadas em `main`)* | — | — | — | 0 | — |

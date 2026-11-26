@@ -26,8 +26,11 @@ Todo artefato passa por **um único juiz determinístico fail-closed** (`tools/o
 
 1. **CLI Unificada (`tools/oedt.mjs` — zero dependências):**
    - `node tools/oedt.mjs setup`: audita versão do Node.js (>= 20), integridade dos artefatos do harness (`desk/gaps.json`, `graveyard/index.json`, `feed/events.jsonl`) e prontidão do juiz.
-   - `node tools/oedt.mjs next [--program <prog>]`: consulta `desk/gaps.json` e `graveyard/index.json` e retorna a próxima lacuna `open` pronta para execução isolada sem conflito de merge.
+   - `node tools/oedt.mjs next [--program <prog>] [--all] [--offline]`: consulta `desk/gaps.json`, `graveyard/index.json` e **PRs abertos no GitHub** para retornar a próxima lacuna `open` sem colisão entre agentes simultâneos.
+   - `node tools/oedt.mjs init <GAP_ID>`: gera um rascunho pré-preenchido (`fail-closed` até que coordenadas e medições públicas reais sejam inseridas).
+   - `node tools/oedt.mjs wrap <export-do-app.json> --gap <GAP_ID>`: converte arquivos exportados gratuitamente em `https://ecbyts.com/app` (`ecbt.project-bundle/2.1.0`, `ecbt.user-case-bundle/1.0.0` ou `.ecbt-zero.json`) para o contrato oficial do juiz preservando `<LQ` e o SHA-256 de origem.
    - `node tools/oedt.mjs check [arquivo]`: executa o juiz determinístico fail-closed, valida isolamento `1 arquivo = 1 lacuna`, verifica que a fonte não está enterrada no Graveyard e imprime o **SHA-256 canônico da evidência**.
+   - `node tools/oedt.mjs cert <arquivo>`: emite o **Certificado Digital Verificável 100% gratuito** (JSON + SVG com selo criptográfico SHA-256 ancorado no GitHub, totalmente desacoplado do registro comercial pago de RT).
    - `node tools/oedt.mjs board`: gera o placar transparente por Program (`open / claimed / checked / refuted / dead_source`), aplicando a regra **"Who is counted"** e separando contagens de `Human` vs `Human + AI Agent`.
 2. **Desk de Lacunas (`desk/gaps.json`):** 6 Programs temáticos e lacunas geográficas priorizadas com caminho alvo dedicado (`contributions/<ISO2>/<slug>.ecbt.json`).
 3. **The Graveyard (`graveyard/README.md` + `graveyard/index.json`):** memória pública negativa de fontes mortas, classes de licença bloqueadas e unidades refutadas, impedindo que novos humanos ou agentes repitam falhas já provadas.

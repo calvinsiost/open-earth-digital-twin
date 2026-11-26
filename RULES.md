@@ -69,7 +69,7 @@
 - **Guardião de Bacia/Bioma:** 5 ou mais contribuições consistentes vinculadas a uma bacia hidrográfica, aquífero ou bioma específico.
 - **Embaixador Global:** 10 ou mais contribuições em múltiplos países/regiões ou atuação recorrente validada em revisão técnica comunitária.
 
-7.2. **Certificado Digital Verificável com Selo QR:** ao atingir ou avançar de nível após a abertura oficial do desafio, o contribuidor pode solicitar a emissão gratuita do Certificado Digital Verificável em `https://ecbyts.com`. O certificado exibe nome de exibição escolhido, identificador GitHub, nível conquistado, códigos das contribuições aprovadas, data de emissão e **Selo QR** para consulta pública da autenticidade.
+7.2. **Certificado Digital Verificável 100% Gratuito (SHA-256 / Selo QR):** toda contribuição aprovada pelo juiz determinístico (`checked`) habilita emissão **integralmente gratuita** do Certificado Digital Verificável via `node tools/oedt.mjs cert <arquivo>` (recibo criptográfico JSON + cartão SVG ancorado no histórico público do GitHub) e reconhecimento oficial no `HALL_OF_FAME.md`. **O registro comercial pago de Responsável Técnico (R$ 25,00) oferecido opcionalmente em `https://ecbyts.com` para projetos privados NÃO é exigido nem recomendado para participar do Desafio Mundial.** O certificado exibe nome de exibição escolhido, identificador GitHub, nível conquistado, códigos das contribuições aprovadas, data de emissão e código criptográfico SHA-256 para conferência pública da autenticidade.
 
 ## 8. Licenciamento das Contribuições
 

@@ -46,6 +46,47 @@ export const PROGRAM_TO_DOMAIN = Object.freeze({
 
 export const VALID_CONTRIBUTOR_MODES = new Set(["human", "human_plus_ai_agent"]);
 
+export const PLACEHOLDER_HANDLES = new Set([
+  "seu-usuario-github",
+  "your-github-handle",
+  "replace-with-github-handle",
+  "todo-github-handle",
+]);
+
+export function resolveRecognitionTier(checkedCount) {
+  const n = Number.isFinite(checkedCount) ? checkedCount : 0;
+  if (n >= 10) {
+    return {
+      level: 4,
+      code: "global-ambassador",
+      name_pt: "Embaixador Global",
+      name_en: "Global Ambassador",
+    };
+  }
+  if (n >= 5) {
+    return {
+      level: 3,
+      code: "basin-biome-guardian",
+      name_pt: "Guardião de Bacia/Bioma",
+      name_en: "Basin & Biome Guardian",
+    };
+  }
+  if (n >= 3) {
+    return {
+      level: 2,
+      code: "public-data-cartographer",
+      name_pt: "Cartógrafo de Dados Públicos",
+      name_en: "Public Data Cartographer",
+    };
+  }
+  return {
+    level: 1,
+    code: "environmental-explorer",
+    name_pt: "Explorador Ambiental",
+    name_en: "Environmental Explorer",
+  };
+}
+
 const ISO2_RE = /^[A-Z]{2}$/;
 const KEBAB_ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const GAP_ID_RE = /^GAP-[A-Z]{2}-\d{3}$/;
@@ -389,6 +430,13 @@ export function validateContributionObject(data, options = {}) {
       errors.push(
         'Missing or invalid "author.github_handle" (valid GitHub username without "@" required).',
       );
+    } else if (
+      data.is_template_example !== true &&
+      PLACEHOLDER_HANDLES.has(github_handle.trim().toLowerCase())
+    ) {
+      errors.push(
+        `Placeholder "author.github_handle" ("${github_handle}") must be replaced with your real GitHub username.`,
+      );
     }
     if (!isNonEmptyString(display_name)) {
       errors.push('Missing or invalid "author.display_name".');
@@ -525,6 +573,10 @@ export function validateContributionFile(filePath, context = {}) {
     gapId: isPlainObject(parsed) ? parsed.gap_id : undefined,
     program: isPlainObject(parsed) ? parsed.program : undefined,
     domain: isPlainObject(parsed) ? parsed.domain : undefined,
+    githubHandle:
+      isPlainObject(parsed) && isPlainObject(parsed.author)
+        ? parsed.author.github_handle
+        : undefined,
     isTemplateExample: isPlainObject(parsed) && parsed.is_template_example === true,
     contributorMode:
       isPlainObject(parsed) && isPlainObject(parsed.author)

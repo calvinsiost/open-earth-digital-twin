@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "updated_at_utc": "2026-11-26T15:30:00Z",
+  "updated_at_utc": "2026-11-26T16:40:00Z",
   "policy_tombstones": [
     {
       "id": "GY-POLICY-001",
@@ -17,6 +17,25 @@
       "buried_at_utc": "2026-11-26T15:30:00Z"
     }
   ],
-  "dead_sources": [],
+  "dead_sources": [
+    {
+      "id": "GY-SRC-001",
+      "program": "air-quality",
+      "agency": "EEA (legacy airindex host)",
+      "official_url": "https://airindex.eea.europa.eu",
+      "buried_reason": "dead_source",
+      "reason": "Returned HTTP 502 Bad Gateway during live accessibility check (2026-11-26). Replaced by https://www.eea.europa.eu/en/topics/in-depth/air-pollution and https://explore.openaq.org.",
+      "buried_at_utc": "2026-11-26T16:40:00Z"
+    },
+    {
+      "id": "GY-SRC-002",
+      "program": "air-quality",
+      "agency": "CETESB QUALAR (login-gated historical portal)",
+      "official_url": "https://qualar.cetesb.sp.gov.br",
+      "buried_reason": "dead_source",
+      "reason": "Historical data exports require individual user registration/login wall. Use login-free public endpoints https://monitorar.mma.gov.br or https://explore.openaq.org instead.",
+      "buried_at_utc": "2026-11-26T16:40:00Z"
+    }
+  ],
   "refuted_units": []
 }

@@ -6,6 +6,9 @@
 node_modules/
 *.log
 
+# Local generated certificates (emit freely via `node tools/oedt.mjs cert`)
+certificates/
+
 # OS and editor metadata
 .DS_Store
 Thumbs.db
