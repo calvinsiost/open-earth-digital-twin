@@ -301,7 +301,7 @@ export function runSetup(repoRoot = DEFAULT_REPO_ROOT) {
       "2A. Browser track:       https://ecbyts.com/app -> Baixar .ecbt -> node tools/oedt.mjs wrap <file.ecbt.json> --gap <GAP_ID> --lat <LAT> --lon <LON> --github <USER>",
       "2B. CLI / Agent track:   node tools/oedt.mjs init <GAP_ID> --github <USER> --lat <LAT> --lon <LON>",
       "3. Run local judge:      node tools/oedt.mjs check <your-file.ecbt.json>",
-      "4. Free certificate:     node tools/oedt.mjs cert <your-file.ecbt.json>  (100% free — never pay R$ 25 commercial RT seal for the Challenge)",
+      "4. Free certificate:     node tools/oedt.mjs cert <your-file.ecbt.json> [--lang en|pt|bilingual]  (100% free — never pay optional commercial seal fees for the Challenge)",
     ],
   };
 }
@@ -1052,7 +1052,8 @@ function renderVisualSealGridSvg(hexDigest, originX, originY, cellSize = 10) {
   return rects.join("\n      ");
 }
 
-function renderCertificateSvg(cert) {
+function renderCertificateSvg(cert, lang = "en") {
+  const mode = lang === "pt" || lang === "bilingual" ? lang : "en";
   const displayName = escapeXml(truncateText(cert.contributor.display_name, 34));
   const handle = escapeXml(`@${cert.contributor.github_handle}`);
   const tierPt = escapeXml(cert.tier.name_pt);
@@ -1073,6 +1074,43 @@ function renderCertificateSvg(cert) {
   const issuedAt = escapeXml(cert.issued_at_utc.slice(0, 10));
   const sealGrid = renderVisualSealGridSvg(cert.certificate_sha256, 988, 224, 12);
 
+  const copy =
+    mode === "pt"
+      ? {
+          heading: "Certificado Digital de Reconhecimento Público",
+          verifiedBadge: "100% GRATUITO · VERIFICADO",
+          awardedTo: "CONCEDIDO A",
+          tierLabel: `Nível ${cert.tier.level}: ${tierPt}`,
+          sectionTitle: "CONTRIBUIÇÃO PÚBLICA VERIFICADA PELO JUIZ DETERMINÍSTICO",
+          sourcePrefix: "Fonte oficial",
+          issuedPrefix: "Emitido em",
+          footer:
+            "100% Gratuito · Sem premiação monetária · Dados públicos abertos (ODC-By 1.0) · Independente de serviços comerciais opcionais",
+        }
+      : mode === "bilingual"
+        ? {
+            heading: "Verifiable Public Recognition Certificate · Certificado Digital",
+            verifiedBadge: "100% FREE · VERIFIED",
+            awardedTo: "AWARDED TO / CONCEDIDO A",
+            tierLabel: `Tier ${cert.tier.level}: ${tierEn} (${tierPt})`,
+            sectionTitle: "DETERMINISTICALLY VERIFIED PUBLIC ENVIRONMENTAL CONTRIBUTION",
+            sourcePrefix: "Official source / Fonte",
+            issuedPrefix: "Issued",
+            footer:
+              "100% Free Worldwide · Zero Monetary Prizes · Open Public Data (ODC-By 1.0) · Independent of Optional Commercial Services",
+          }
+        : {
+            heading: "Verifiable Public Recognition Certificate",
+            verifiedBadge: "100% FREE · VERIFIED",
+            awardedTo: "AWARDED TO",
+            tierLabel: `Tier ${cert.tier.level}: ${tierEn}`,
+            sectionTitle: "DETERMINISTICALLY VERIFIED PUBLIC ENVIRONMENTAL CONTRIBUTION",
+            sourcePrefix: "Official public source",
+            issuedPrefix: "Issued",
+            footer:
+              "100% Free Worldwide · Zero Monetary Prizes · Open Public Data (ODC-By 1.0) · Independent of Optional Commercial Services",
+          };
+
   const previewRibbon = cert.preview_only
     ? `<g transform="translate(860, 44)">
       <rect x="0" y="0" width="286" height="34" rx="17" fill="#F59E0B" />
@@ -1080,7 +1118,7 @@ function renderCertificateSvg(cert) {
     </g>`
     : `<g transform="translate(888, 44)">
       <rect x="0" y="0" width="258" height="34" rx="17" fill="#10B981" fill-opacity="0.18" stroke="#10B981" stroke-width="1.5" />
-      <text x="129" y="22" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#34D399">100% GRATUITO · VERIFICADO</text>
+      <text x="129" y="22" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#34D399">${copy.verifiedBadge}</text>
     </g>`;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -1102,24 +1140,24 @@ function renderCertificateSvg(cert) {
   <rect x="36" y="36" width="1128" height="603" rx="14" fill="none" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.22" />
 
   <text x="64" y="72" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="2.4" fill="#38BDF8">OPEN EARTH DIGITAL TWIN · GLOBAL PUBLIC CHALLENGE</text>
-  <text x="64" y="106" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="800" fill="#F8FAFC">Certificado Digital de Reconhecimento Público</text>
+  <text x="64" y="106" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="800" fill="#F8FAFC">${escapeXml(copy.heading)}</text>
   ${previewRibbon}
 
   <line x1="64" y1="128" x2="1136" y2="128" stroke="#1E3A5F" stroke-width="1.5" />
 
-  <text x="64" y="172" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" letter-spacing="1.4" fill="#94A3B8">CONCEDIDO A / AWARDED TO</text>
+  <text x="64" y="172" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" letter-spacing="1.4" fill="#94A3B8">${copy.awardedTo}</text>
   <text x="64" y="218" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="800" fill="#FFFFFF">${displayName}</text>
   <text x="64" y="252" font-family="Consolas, Menlo, monospace" font-size="18" font-weight="600" fill="#34D399">${handle}</text>
 
   <g transform="translate(64, 276)">
     <rect x="0" y="0" width="600" height="44" rx="10" fill="#0D2A3F" stroke="#10B981" stroke-width="1.5" />
-    <text x="18" y="28" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" fill="#A7F3D0">Nível ${cert.tier.level}: ${tierPt} (${tierEn})</text>
+    <text x="18" y="28" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" fill="#A7F3D0">${copy.tierLabel}</text>
   </g>
 
-  <text x="64" y="362" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="1.3" fill="#94A3B8">CONTRIBUIÇÃO PÚBLICA VERIFICADA PELO JUIZ DETERMINÍSTICO</text>
+  <text x="64" y="362" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="1.3" fill="#94A3B8">${copy.sectionTitle}</text>
   <text x="64" y="392" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#E2E8F0">${title}</text>
   <text x="64" y="422" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#CBD5E1">${regionLine}</text>
-  <text x="64" y="450" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#94A3B8">Fonte oficial: ${sourceLine}</text>
+  <text x="64" y="450" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#94A3B8">${copy.sourcePrefix}: ${sourceLine}</text>
   <text x="64" y="476" font-family="Consolas, Menlo, monospace" font-size="13" fill="#38BDF8">${gapLine}</text>
 
   <g>
@@ -1129,7 +1167,7 @@ function renderCertificateSvg(cert) {
       ${sealGrid}
     </g>
     <text x="1054" y="384" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="13" font-weight="700" fill="#F8FAFC">${certId}</text>
-    <text x="1054" y="408" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#94A3B8">Emitido em ${issuedAt}</text>
+    <text x="1054" y="408" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#94A3B8">${copy.issuedPrefix} ${issuedAt}</text>
   </g>
 
   <rect x="64" y="512" width="1072" height="84" rx="12" fill="#06101E" stroke="#1E3A5F" stroke-width="1.2" />
@@ -1137,7 +1175,7 @@ function renderCertificateSvg(cert) {
   <text x="84" y="560" font-family="Consolas, Menlo, monospace" font-size="12" fill="#94A3B8">CERT SHA-256:     <tspan fill="#38BDF8">${certSha}</tspan></text>
   <text x="84" y="582" font-family="Consolas, Menlo, monospace" font-size="12" fill="#CBD5E1">VERIFY: github.com/${escapeXml(DEFAULT_GITHUB_REPO)} · node tools/oedt.mjs check</text>
 
-  <text x="64" y="624" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#64748B">100% Gratuito · Sem premiação monetária · Dados públicos abertos (ODC-By 1.0) · Independente de registro comercial de RT</text>
+  <text x="64" y="624" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#64748B">${copy.footer}</text>
 </svg>
 `;
 }
@@ -1152,8 +1190,10 @@ export function runCert({
   targetPath,
   outDir = null,
   prUrl = null,
+  lang = "en",
   preview = false,
 } = {}) {
+  const normalizedLang = lang === "pt" || lang === "bilingual" ? lang : "en";
   if (!targetPath) {
     return { ok: false, error: "Missing required path to a verified .ecbt.json contribution file." };
   }
@@ -1220,6 +1260,7 @@ export function runCert({
   const unsignedCert = {
     schema_version: "oedt.certificate/1.0.0",
     certificate_id: certificateId,
+    language: normalizedLang,
     preview_only: Boolean(preview && checkRes.isTemplateExample),
     free_challenge_policy:
       "100% Free Public Recognition Certificate — Zero fee, decoupled from optional commercial RT registration.",
@@ -1273,7 +1314,7 @@ export function runCert({
   const svgPath = path.join(resolvedOutDir, `${parsed.contribution_id}${suffix}.svg`);
 
   writeUtf8NoBom(jsonPath, `${JSON.stringify(cert, null, 2)}\n`);
-  writeUtf8NoBom(svgPath, renderCertificateSvg(cert));
+  writeUtf8NoBom(svgPath, renderCertificateSvg(cert, normalizedLang));
 
   return {
     ok: true,
@@ -1652,6 +1693,7 @@ async function runCli() {
       targetPath: positionals[0] || null,
       outDir: flags["out-dir"] || flags.out || null,
       prUrl: flags.pr || null,
+      lang: flags.lang || "en",
       preview: Boolean(flags.preview),
     });
     if (json) console.log(JSON.stringify(res, null, 2));
@@ -1673,7 +1715,7 @@ async function runCli() {
   console.log("  node tools/oedt.mjs init <GAP_ID> [--github <user>] [--lat <n>] [--lon <n>] [--force] [--json]");
   console.log("  node tools/oedt.mjs wrap <ecbyts-export.json> --gap <GAP_ID> --github <user> --lat <n> --lon <n> [--force] [--json]");
   console.log("  node tools/oedt.mjs check [file_or_dir] [--json]");
-  console.log("  node tools/oedt.mjs cert <verified-file.ecbt.json> [--out-dir <dir>] [--pr <url>] [--preview] [--json]");
+  console.log("  node tools/oedt.mjs cert <verified-file.ecbt.json> [--lang en|pt|bilingual] [--out-dir <dir>] [--pr <url>] [--preview] [--json]");
   console.log("  node tools/oedt.mjs board [--json]");
   process.exit(cmd === "help" || cmd === "--help" || cmd === "-h" ? 0 : 1);
 }

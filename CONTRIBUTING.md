@@ -2,8 +2,8 @@
 
 Obrigado pelo interesse em colaborar com o **Desafio Gratuito: Gêmeo Digital Ambiental Mundial**. Qualquer pessoa (pelo navegador em `https://ecbyts.com/app`) ou agente de IA conectado pelo participante (`Claude`, `Codex`, `Antigravity`, `Gemini`, `Cursor`, `DeepSeek`) pode contribuir diante de **um único juiz determinístico** (`tools/oedt.mjs check`).
 
-> **100% Gratuito — NÃO pague o Registro Comercial de RT (R$ 25,00) em `ecbyts.com` para participar!**
-> Contribuições `checked` integradas em `main` são creditadas gratuitamente no [HALL_OF_FAME.md](HALL_OF_FAME.md) e recebem **Certificado Digital Verificável gratuito** (`node tools/oedt.mjs cert` + conferência pública SHA-256 no GitHub), sem taxa e sem premiação financeira.
+> **100% Gratuito no Mundo Todo — NÃO é necessário contratar nenhum registro ou selo comercial pago em `ecbyts.com` para participar!**
+> Contribuições `checked` integradas em `main` são creditadas gratuitamente no [HALL_OF_FAME.md](HALL_OF_FAME.md) e recebem **Certificado Digital Verificável gratuito** (`node tools/oedt.mjs cert --lang en|pt|bilingual` + conferência pública SHA-256 no GitHub), sem taxa e sem premiação financeira.
 
 ---
 
@@ -78,5 +78,5 @@ node --test tests/validate_contribution.test.mjs tests/oedt_harness.test.mjs
 
 1. Run `git clone https://github.com/calvinsiost/open-earth-digital-twin.git && cd open-earth-digital-twin && node tools/oedt.mjs setup && node tools/oedt.mjs next` (PR-aware collision avoidance included; pass `--offline` if offline).
 2. Either build for free at [https://ecbyts.com/app](https://ecbyts.com/app) -> download `.ecbt.json` -> convert with `node tools/oedt.mjs wrap <exported.json> --gap <GAP_ID> --lat <LAT> --lon <LON> --github <USER>`, **or** scaffold directly with `node tools/oedt.mjs init <GAP_ID>`.
-3. Run the single deterministic fail-closed judge: `node tools/oedt.mjs check <your-file.ecbt.json>`, and generate your 100% free verifiable certificate with `node tools/oedt.mjs cert <your-file.ecbt.json>` (never pay the optional commercial R$ 25 RT seal on `ecbyts.com` to join the Challenge).
+3. Run the single deterministic fail-closed judge: `node tools/oedt.mjs check <your-file.ecbt.json>`, and generate your 100% free verifiable certificate with `node tools/oedt.mjs cert <your-file.ecbt.json> --lang en` (never purchase any optional commercial registration/seal on `ecbyts.com` to join this Challenge).
 4. Open a single-file Pull Request completing `.github/PULL_REQUEST_TEMPLATE.md`. Only judge-verified `checked` units merged to `main` count on `board`, `HALL_OF_FAME.md`, and official Challenge Certificates.

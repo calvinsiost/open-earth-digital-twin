@@ -333,6 +333,166 @@
       ],
       "expected_parameters": ["Taxa de coleta seletiva (%)", "Destinação ambientalmente adequada (t/ano)", "Índice de atendimento de esgoto (%)"],
       "notes": "Utilizar exclusivamente indicadores públicos agregados por município ou estado, sem qualquer dado pessoal."
+    },
+    {
+      "gap_id": "GAP-WB-004",
+      "program": "water-basins",
+      "domain": "water_basins",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "CA",
+      "region": "Mackenzie / St. Lawrence River Basin, Canada (North America / Arctic)",
+      "title": "Public Hydrometric & Water Station — Environment and Climate Change Canada",
+      "target_file": "contributions/CA/canada-wateroffice-hydrometric-station.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "Environment and Climate Change Canada (Wateroffice)",
+          "official_url": "https://wateroffice.ec.gc.ca",
+          "expected_license": "Open Government Licence - Canada (OGL)"
+        },
+        {
+          "agency": "Government of Canada Open Data Portal",
+          "official_url": "https://open.canada.ca/en/open-data",
+          "expected_license": "Open Government Licence - Canada (OGL)"
+        }
+      ],
+      "expected_parameters": ["Discharge (m³/s)", "Water Level (m)", "Dissolved Oxygen (mg/L)"],
+      "notes": "Cite official Wateroffice station ID and UTC timestamp; preserve any censored analytical reading as below_detection_limit: true."
+    },
+    {
+      "gap_id": "GAP-AQ-004",
+      "program": "air-quality",
+      "domain": "air_quality",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "JP",
+      "region": "Tokyo / Osaka Metropolitan Area, Japan (East Asia)",
+      "title": "Public Ambient Air-Quality Station — Japan (Soramame / OpenAQ)",
+      "target_file": "contributions/JP/japan-ambient-air-quality-station.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "Ministry of the Environment Japan (Soramame Atmospheric Monitoring)",
+          "official_url": "https://soramame.env.go.jp",
+          "expected_license": "CC BY 4.0 / Public Open Government Data (Japan)"
+        },
+        {
+          "agency": "OpenAQ Explorer (Japan Reference Stations)",
+          "official_url": "https://explore.openaq.org",
+          "expected_license": "CC BY 4.0 / Public Open Data"
+        }
+      ],
+      "expected_parameters": ["PM2.5 (µg/m³)", "NO2 (µg/m³)", "O3 (µg/m³)", "SO2 (µg/m³)"],
+      "notes": "Record exact WGS84 coordinates of the reference station and UTC averaging window."
+    },
+    {
+      "gap_id": "GAP-CS-003",
+      "program": "contaminated-sites",
+      "domain": "soil_contaminated_sites",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "AU",
+      "region": "Australia (Oceania — State Public Contaminated Land & Soil Baseline)",
+      "title": "Public Soil & Contaminated Land Register Record — Australia (data.gov.au)",
+      "target_file": "contributions/AU/australia-public-soil-contaminated-land.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "Australian Government Open Data Portal (data.gov.au)",
+          "official_url": "https://data.gov.au",
+          "expected_license": "CC BY 4.0"
+        }
+      ],
+      "expected_parameters": ["Public Register Site ID", "Published Contaminant Group", "Soil/Groundwater Concentration with <LQ"],
+      "notes": "Strictly use publicly published open government registers (CC BY 4.0); exclude private landowner PII."
+    },
+    {
+      "gap_id": "GAP-CE-002",
+      "program": "climate-emissions",
+      "domain": "climate_emissions",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "KE",
+      "region": "Nairobi / Rift Valley, Kenya (East Africa)",
+      "title": "East Africa Open Meteorological & Climate Station — NOAA NCEI / Copernicus",
+      "target_file": "contributions/KE/kenya-east-africa-climate-station.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "NOAA NCEI (Global Historical Climatology Network)",
+          "official_url": "https://www.ncei.noaa.gov",
+          "expected_license": "U.S. Federal Public Domain (CC0)"
+        },
+        {
+          "agency": "Copernicus Climate Change Service (C3S)",
+          "official_url": "https://climate.copernicus.eu",
+          "expected_license": "Copernicus Free, Full and Open Data Policy"
+        }
+      ],
+      "expected_parameters": ["Mean Temperature (°C)", "Cumulative Precipitation (mm)", "Solar Radiation / Anomaly"],
+      "notes": "Cite official WMO/GHCN station code and UTC observation period."
+    },
+    {
+      "gap_id": "GAP-BB-003",
+      "program": "biomes-biodiversity",
+      "domain": "biodiversity_forests",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "CL",
+      "region": "Andes & Patagonia, Chile (Hispanic South America)",
+      "title": "Andes & Patagonia Open Biodiversity Baseline — GBIF API v1 (CC0 / CC BY)",
+      "target_file": "contributions/CL/chile-andes-patagonia-biodiversity.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "GBIF Public API v1 (Chile CC0/CC BY Filter)",
+          "official_url": "https://api.gbif.org/v1/occurrence/search?country=CL&limit=1",
+          "expected_license": "CC0 1.0 / CC BY 4.0 (strictly exclude CC BY-NC)"
+        },
+        {
+          "agency": "Copernicus Climate & Land Monitoring",
+          "official_url": "https://climate.copernicus.eu",
+          "expected_license": "Copernicus Free, Full and Open Data Policy"
+        }
+      ],
+      "expected_parameters": ["Species Richness Index (CC0/CC BY subset)", "Native Forest Cover (%)"],
+      "notes": "Strictly filter GBIF queries to CC0_1_0 or CC_BY_4_0; never include CC BY-NC records."
+    },
+    {
+      "gap_id": "GAP-BB-004",
+      "program": "biomes-biodiversity",
+      "domain": "biodiversity_forests",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "ZA",
+      "region": "Western Cape / Savanna Biome, South Africa (Southern Africa)",
+      "title": "Southern Africa Open Biodiversity Baseline — GBIF API v1 (CC0 / CC BY)",
+      "target_file": "contributions/ZA/south-africa-biodiversity-baseline.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "GBIF Public API v1 (South Africa CC0/CC BY Filter)",
+          "official_url": "https://api.gbif.org/v1/occurrence/search?country=ZA&limit=1",
+          "expected_license": "CC0 1.0 / CC BY 4.0 (strictly exclude CC BY-NC)"
+        }
+      ],
+      "expected_parameters": ["Endemic Taxa Richness (CC0/CC BY subset)", "Protected Biome Area (ha)"],
+      "notes": "Strictly exclude CC BY-NC records and cite the official GBIF query/DOI."
+    },
+    {
+      "gap_id": "GAP-SW-002",
+      "program": "sanitation-waste",
+      "domain": "waste_sanitation",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "FR",
+      "region": "France / European Union Reference (Eurostat Open Statistics)",
+      "title": "European Municipal Waste & Sanitation Public Indicators — Eurostat",
+      "target_file": "contributions/FR/france-eurostat-waste-sanitation.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "Eurostat (European Commission Open Statistics)",
+          "official_url": "https://ec.europa.eu/eurostat",
+          "expected_license": "CC BY 4.0 (European Commission Reuse Policy)"
+        }
+      ],
+      "expected_parameters": ["Municipal Recycling Rate (%)", "Waste Treated per Capita (kg/yr)", "Wastewater Connection Rate (%)"],
+      "notes": "Cite exact Eurostat table code (e.g., env_wasmun) and reference year; aggregated public data only."
     }
   ]
 }

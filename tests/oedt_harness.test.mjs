@@ -77,14 +77,14 @@ describe("tools/oedt.mjs — Open Earth Digital Twin Harness", () => {
     const res = runSetup(DEFAULT_REPO_ROOT);
     assert.equal(res.ok, true);
     assert.equal(res.programs, 6);
-    assert.equal(res.gaps, 12);
+    assert.equal(res.gaps, 19);
     assert.ok(res.checks.every((c) => c.ok));
   });
 
   it("2. next retorna próxima lacuna aberta, filtra por --program e evita colisão com PRs abertos", async () => {
     const first = runNext({ repoRoot: DEFAULT_REPO_ROOT });
     assert.equal(first.ok, true);
-    assert.equal(first.open_matching_count, 12);
+    assert.equal(first.open_matching_count, 19);
     assert.equal(first.gap.status, "open");
     assert.ok(first.gap.target_file.startsWith("contributions/"));
 
@@ -175,7 +175,7 @@ describe("tools/oedt.mjs — Open Earth Digital Twin Harness", () => {
     const res = runBoard(DEFAULT_REPO_ROOT);
     assert.equal(res.ok, true);
     assert.equal(res.programs.length, 6);
-    assert.equal(res.totals.open, 12);
+    assert.equal(res.totals.open, 19);
     assert.equal(res.totals.checked, 0);
     assert.equal(res.totals.dead_source, 2);
     assert.equal(res.who_is_counted.template_examples_excluded, 1);
@@ -425,7 +425,7 @@ describe("tools/oedt.mjs — Open Earth Digital Twin Harness", () => {
       assert.equal(wrapB.source_format, "ecbt.user-case-bundle/1.0.0");
       assert.equal(wrapB.observations_converted, 1);
 
-      // Shape C: cert emits free verifiable JSON + SVG for verified wrapped file, and refuses template without --preview
+      // Shape C: cert emits free verifiable JSON + SVG (default global EN + PT + bilingual) and refuses template without --preview
       const certDir = path.join(tmpDir, "certs");
       const certOk = runCert({
         repoRoot: DEFAULT_REPO_ROOT,
@@ -433,17 +433,33 @@ describe("tools/oedt.mjs — Open Earth Digital Twin Harness", () => {
         outDir: certDir,
       });
       assert.equal(certOk.ok, true, `Cert failed: ${JSON.stringify(certOk)}`);
+      assert.equal(certOk.certificate.language, "en");
       assert.match(certOk.certificate.certificate_id, /^OEDT-CERT-[A-F0-9]{12}$/);
       assert.match(certOk.certificate.certificate_sha256, /^[a-f0-9]{64}$/);
       assert.equal(certOk.certificate.tier.level, 1);
       assert.equal(certOk.certificate.preview_only, false);
       assert.equal(fs.existsSync(certOk.files.json_abs), true);
       assert.equal(fs.existsSync(certOk.files.svg_abs), true);
-      const svgText = fs.readFileSync(certOk.files.svg_abs, "utf8");
-      assert.ok(svgText.includes("<svg"));
-      assert.ok(svgText.includes("100% GRATUITO"));
-      assert.ok(svgText.includes("@engenheiro-publico"));
-      assert.ok(svgText.includes(certOk.certificate.certificate_id));
+      const svgEn = fs.readFileSync(certOk.files.svg_abs, "utf8");
+      assert.ok(svgEn.includes("<svg"));
+      assert.ok(svgEn.includes("100% FREE"));
+      assert.ok(svgEn.includes("Verifiable Public Recognition Certificate"));
+      assert.ok(svgEn.includes("@engenheiro-publico"));
+      assert.ok(svgEn.includes(certOk.certificate.certificate_id));
+      assert.equal(/R\$/.test(svgEn), false, "Global certificate must stay currency-neutral");
+
+      // Also verify --lang pt
+      const certPt = runCert({
+        repoRoot: DEFAULT_REPO_ROOT,
+        targetPath: outBundle,
+        outDir: path.join(tmpDir, "certs-pt"),
+        lang: "pt",
+      });
+      assert.equal(certPt.ok, true);
+      assert.equal(certPt.certificate.language, "pt");
+      const svgPt = fs.readFileSync(certPt.files.svg_abs, "utf8");
+      assert.ok(svgPt.includes("100% GRATUITO"));
+      assert.ok(svgPt.includes("Certificado Digital de Reconhecimento Público"));
 
       // Template file must be rejected by cert without --preview
       const templatePath = path.join(
