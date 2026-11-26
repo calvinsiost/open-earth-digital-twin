@@ -1,0 +1,82 @@
+name: Propor Nova Contribuição ou Fonte Pública
+description: Sugira uma nova estação, bacia, bioma ou portal público ambiental oficial para o Gêmeo Digital Ambiental Mundial.
+title: "[Nova Contribuição] "
+labels:
+  - public-source
+  - community
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use este formulário para propor uma fonte pública oficial ou organizar uma nova contribuição ao **Desafio Gratuito: Gêmeo Digital Ambiental Mundial**.
+        **Lembrete:** somente dados públicos oficiais e abertos. Nunca publique dados privados, de clientes ou informações pessoais (PII).
+
+  - type: input
+    id: country_region
+    attributes:
+      label: País (ISO-2) e Região / Bacia / Bioma
+      description: Informe o código ISO-2 do país e a região ambiental alvo.
+      placeholder: "Ex.: BR — Bacia do Rio Doce (MG/ES)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domínio Ambiental
+      description: Selecione o domínio principal desta proposta.
+      options:
+        - water_basins (Água e Bacias Hidrográficas)
+        - air_quality (Qualidade do Ar)
+        - soil_contaminated_sites (Solo e Áreas Contaminadas Públicas)
+        - climate_emissions (Clima e Emissões)
+        - biodiversity_forests (Biodiversidade e Florestas)
+        - waste_sanitation (Resíduos e Saneamento)
+    validations:
+      required: true
+
+  - type: input
+    id: agency
+    attributes:
+      label: Órgão Público ou Observatório Aberto
+      description: Nome da instituição pública oficial ou observatório científico aberto (fonte independente, sem endosso à ECBYTS).
+      placeholder: "Ex.: ANA / CETESB / USGS / Copernicus"
+    validations:
+      required: true
+
+  - type: input
+    id: official_url
+    attributes:
+      label: URL Oficial (https://)
+      description: Endereço direto verificável do portal ou conjunto de dados público.
+      placeholder: "https://..."
+    validations:
+      required: true
+
+  - type: input
+    id: license
+    attributes:
+      label: Licença Pública da Fonte
+      description: Informe a licença aberta verificada (ex.: Domínio Público, CC0, CC BY 4.0, ODC-By, Dados Abertos / LAI). Fontes CC BY-NC ou fechadas não são aceitas.
+      placeholder: "Ex.: CC BY 4.0 / Dados Abertos Governamentais (LAI)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Descrição Técnica da Proposta
+      description: Descreva quais parâmetros ambientais ou camadas serão estruturados em .ecbt.json (incluindo tratamento de <LQ quando aplicável).
+      placeholder: "Resumo dos parâmetros públicos, período coberto e eventuais observações técnicas..."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: compliance
+    attributes:
+      label: Declaração Obrigatória de Conformidade
+      options:
+        - label: Confirmo que esta proposta utiliza exclusivamente dados públicos oficiais abertos, sem dados privados, sem clientes e sem PII (CPF, e-mail pessoal, telefone).
+          required: true
+        - label: Estou ciente de que o desafio é 100% gratuito e voltado exclusivamente a reconhecimento público no Hall of Fame e Certificado Digital Verificável com Selo QR em ecbyts.com (sem premiação financeira).
+          required: true

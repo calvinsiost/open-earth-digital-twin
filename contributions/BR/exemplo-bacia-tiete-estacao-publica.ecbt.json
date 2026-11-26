@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "contribution_id": "br-sp-bacia-tiete-estacao-publica-exemplo",
+  "is_template_example": true,
+  "title": "Exemplo Estrutural: Estação Pública na Bacia do Alto Tietê (Modelo Didático)",
+  "country_iso2": "BR",
+  "region": "Bacia do Alto Tietê, Estado de São Paulo, Brasil",
+  "domain": "water_basins",
+  "coordinates": {
+    "latitude": -23.5489,
+    "longitude": -46.6388,
+    "datum": "WGS84",
+    "elevation_m": 760
+  },
+  "source": {
+    "agency": "ANA / CETESB (fontes públicas oficiais independentes, sem endosso ou vínculo formal com a ECBYTS)",
+    "dataset_name": "Referência estrutural baseada nos portais públicos HidroWeb (ANA) e Qualidade das Águas Interiores (CETESB)",
+    "official_url": "https://www.snirh.gov.br/hidroweb",
+    "secondary_reference_url": "https://cetesb.sp.gov.br/aguas-interiores/",
+    "license": "Dados Abertos Governamentais (LAI / CC BY 4.0)",
+    "retrieved_at_utc": "2026-11-26T15:00:00Z",
+    "attribution": "Agência Nacional de Águas e Saneamento Básico (ANA) e Companhia Ambiental do Estado de São Paulo (CETESB)"
+  },
+  "author": {
+    "github_handle": "ecbyts-template-example",
+    "display_name": "Modelo Estrutural Comunitário (Exemplo Didático)",
+    "ecbyts_app_verified": true
+  },
+  "observations": [
+    {
+      "parameter": "Oxigênio Dissolvido (OD)",
+      "matrix": "surface_water",
+      "value": 4.5,
+      "unit": "mg/L",
+      "measured_at_utc": "2026-01-15T12:00:00Z",
+      "below_detection_limit": false,
+      "quantification_limit": 0.1,
+      "qualifier": "sample_template_only",
+      "notes": "Valor estritamente ilustrativo para demonstrar a estrutura do esquema .ecbt.json; não representa laudo real de campanha."
+    },
+    {
+      "parameter": "Chumbo Total (Pb)",
+      "matrix": "surface_water",
+      "value": null,
+      "unit": "mg/L",
+      "measured_at_utc": "2026-01-15T12:00:00Z",
+      "below_detection_limit": true,
+      "quantification_limit": 0.01,
+      "qualifier": "<LQ; sample_template_only",
+      "notes": "Exemplo ilustrativo do registro correto de parâmetro abaixo do limite de quantificação (<LQ) com value null e quantification_limit explícito."
+    }
+  ],
+  "ecbyts_twin_metadata": {
+    "format": "ecbt-json-open-contribution",
+    "generated_with": "https://ecbyts.com/app",
+    "template_notice": "Substitua os valores sample_template_only por séries públicas oficiais reais e remova is_template_example antes de abrir Pull Request."
+  },
+  "disclaimer_public_data_only": true
+}

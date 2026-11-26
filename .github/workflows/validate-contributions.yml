@@ -1,0 +1,31 @@
+name: Validate Public Contributions
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate .ecbt.json contributions & tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate all contribution files
+        run: node scripts/validate_contribution.mjs
+
+      - name: Run validator unit tests
+        run: node --test tests/validate_contribution.test.mjs
