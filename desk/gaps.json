@@ -1,0 +1,333 @@
+{
+  "schema_version": "1.0.0",
+  "updated_at_utc": "2026-11-26T15:30:00Z",
+  "policy": {
+    "one_file_per_gap": true,
+    "public_data_only": true,
+    "commercial_compatible_open_licenses_only": true,
+    "counted_status_for_board_and_certificate": "checked",
+    "zero_monetary_prizes": true,
+    "independence_notice_pi01": "Cited public agencies and open-data initiatives are independent sources with no formal partnership, sponsorship, certification, or endorsement of ECBYTS Ltda."
+  },
+  "programs": [
+    {
+      "id": "water-basins",
+      "domain": "water_basins",
+      "name_pt": "Água e Bacias Hidrográficas",
+      "name_en": "Water & Watersheds",
+      "description": "Public hydrological, river basin, and surface/groundwater quality stations with <LQ analytical fidelity."
+    },
+    {
+      "id": "air-quality",
+      "domain": "air_quality",
+      "name_pt": "Qualidade do Ar",
+      "name_en": "Air Quality",
+      "description": "Official public ambient air monitoring stations (PM2.5, PM10, O3, NO2, SO2, CO)."
+    },
+    {
+      "id": "contaminated-sites",
+      "domain": "soil_contaminated_sites",
+      "name_pt": "Solo e Áreas Contaminadas Públicas",
+      "name_en": "Soil & Public Contaminated Sites",
+      "description": "Public statutory registries of contaminated or remediated sites and open soil baselines (zero private lab PDFs)."
+    },
+    {
+      "id": "climate-emissions",
+      "domain": "climate_emissions",
+      "name_pt": "Clima e Emissões",
+      "name_en": "Climate & Emissions",
+      "description": "Open meteorological records, wildfire telemetry, and public greenhouse-gas inventories."
+    },
+    {
+      "id": "biomes-biodiversity",
+      "domain": "biodiversity_forests",
+      "name_pt": "Biomas e Biodiversidade",
+      "name_en": "Biomes & Biodiversity",
+      "description": "Open forest-cover, deforestation monitoring, and CC0 / CC BY biodiversity records."
+    },
+    {
+      "id": "sanitation-waste",
+      "domain": "waste_sanitation",
+      "name_pt": "Saneamento e Resíduos",
+      "name_en": "Sanitation & Waste",
+      "description": "Public aggregated municipal and regional sanitation, sewage, and solid-waste indicators."
+    }
+  ],
+  "gaps": [
+    {
+      "gap_id": "GAP-WB-001",
+      "program": "water-basins",
+      "domain": "water_basins",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "BR",
+      "region": "Bacia do Alto Tietê, São Paulo, Brasil",
+      "title": "Estação Pública de Qualidade das Águas — Bacia do Alto Tietê (SP)",
+      "target_file": "contributions/BR/bacia-alto-tiete-estacao-publica.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "ANA (HidroWeb / SNIRH)",
+          "official_url": "https://www.snirh.gov.br/hidroweb",
+          "expected_license": "Dados Abertos Governamentais (LAI / CC BY 4.0)"
+        },
+        {
+          "agency": "CETESB (Qualidade das Águas Interiores)",
+          "official_url": "https://cetesb.sp.gov.br/aguas-interiores/",
+          "expected_license": "Dados Públicos Estaduais SP"
+        }
+      ],
+      "expected_parameters": ["Oxigênio Dissolvido (OD)", "DBO", "Turbidez", "Metais traço com <LQ"],
+      "notes": "Selecionar série pública real oficial e preservar qualquer parâmetro abaixo do limite de quantificação com below_detection_limit: true."
+    },
+    {
+      "gap_id": "GAP-WB-002",
+      "program": "water-basins",
+      "domain": "water_basins",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "BR",
+      "region": "Bacia do Rio Doce, Minas Gerais / Espírito Santo, Brasil",
+      "title": "Estação Hidrometeorológica e de Qualidade Pública — Bacia do Rio Doce",
+      "target_file": "contributions/BR/bacia-rio-doce-estacao-publica.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "ANA (HidroWeb / Dados Abertos)",
+          "official_url": "https://dadosabertos.ana.gov.br",
+          "expected_license": "Dados Abertos Governamentais (LAI / CC BY 4.0)"
+        }
+      ],
+      "expected_parameters": ["Vazão", "Turbidez", "Ferro Dissolvido", "Manganês com <LQ"],
+      "notes": "Usar exclusivamente dados oficiais da rede pública ANA/SNIRH."
+    },
+    {
+      "gap_id": "GAP-WB-003",
+      "program": "water-basins",
+      "domain": "water_basins",
+      "status": "open",
+      "priority": 2,
+      "country_iso2": "US",
+      "region": "Mississippi River Basin, United States",
+      "title": "USGS Public Hydrological & Water-Quality Station — Mississippi Basin",
+      "target_file": "contributions/US/mississippi-basin-usgs-station.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "USGS (Water Data for the Nation)",
+          "official_url": "https://waterdata.usgs.gov",
+          "expected_license": "U.S. Federal Public Domain (CC0)"
+        }
+      ],
+      "expected_parameters": ["Discharge (cfs)", "Dissolved Oxygen (mg/L)", "Specific Conductance", "Nitrate"],
+      "notes": "Preserve USGS remark codes ('<') as below_detection_limit: true with explicit quantification_limit."
+    },
+    {
+      "gap_id": "GAP-AQ-001",
+      "program": "air-quality",
+      "domain": "air_quality",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "BR",
+      "region": "Região Metropolitana de São Paulo e Manaus (AM), Brasil",
+      "title": "Estação Pública de Qualidade do Ar — São Paulo (QUALAR) ou Manaus (MonitorAr)",
+      "target_file": "contributions/BR/qualidade-ar-sp-manaus-publica.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "CETESB QUALAR",
+          "official_url": "https://qualar.cetesb.sp.gov.br",
+          "expected_license": "Dados Públicos Estaduais SP"
+        },
+        {
+          "agency": "MMA Rede MonitorAr",
+          "official_url": "https://monitorar.mma.gov.br",
+          "expected_license": "Dados Abertos Governamentais (LAI)"
+        }
+      ],
+      "expected_parameters": ["PM2.5 (µg/m³)", "PM10 (µg/m³)", "O3 (µg/m³)", "NO2 (µg/m³)"],
+      "notes": "Registrar coordenadas oficiais da estação e janela temporal UTC da média horária ou diária."
+    },
+    {
+      "gap_id": "GAP-AQ-002",
+      "program": "air-quality",
+      "domain": "air_quality",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "IN",
+      "region": "New Delhi, India (and London UK reference via OpenAQ)",
+      "title": "OpenAQ Public Urban Air-Quality Station — New Delhi",
+      "target_file": "contributions/IN/openaq-new-delhi-station.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "OpenAQ (Public Reference Station)",
+          "official_url": "https://openaq.org",
+          "expected_license": "CC BY 4.0 / Public Open Data (verify upstream station license)"
+        }
+      ],
+      "expected_parameters": ["PM2.5 (µg/m³)", "PM10 (µg/m³)", "NO2 (µg/m³)"],
+      "notes": "Verify that the selected OpenAQ upstream government station carries an open redistribution-compatible license."
+    },
+    {
+      "gap_id": "GAP-AQ-003",
+      "program": "air-quality",
+      "domain": "air_quality",
+      "status": "open",
+      "priority": 2,
+      "country_iso2": "GB",
+      "region": "London & European Monitoring Network (EEA / OpenAQ)",
+      "title": "Public Ambient Air-Quality Station — Europe / London (EEA & OpenAQ)",
+      "target_file": "contributions/GB/europe-london-air-quality-station.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "EEA (European Air Quality Portal)",
+          "official_url": "https://airindex.eea.europa.eu",
+          "expected_license": "CC BY 4.0 (EEA Reuse Policy)"
+        },
+        {
+          "agency": "OpenAQ",
+          "official_url": "https://openaq.org",
+          "expected_license": "Open Government Licence (OGL) / CC BY 4.0"
+        }
+      ],
+      "expected_parameters": ["NO2 (µg/m³)", "PM2.5 (µg/m³)", "O3 (µg/m³)"],
+      "notes": "Confirm country_iso2 matches the exact EEA/OpenAQ station location selected."
+    },
+    {
+      "gap_id": "GAP-CS-001",
+      "program": "contaminated-sites",
+      "domain": "soil_contaminated_sites",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "BR",
+      "region": "Estado de São Paulo, Brasil",
+      "title": "Registro Público de Área Contaminada ou Reabilitada — Cadastro CETESB",
+      "target_file": "contributions/BR/cetesb-area-contaminada-publica.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "CETESB (Cadastro Público de Áreas Contaminadas)",
+          "official_url": "https://cetesb.sp.gov.br/areas-contaminadas/",
+          "expected_license": "Dados Públicos Estaduais SP (LAI)"
+        }
+      ],
+      "expected_parameters": ["Classificação pública de risco", "Grupo de contaminantes público", "Medida institucional pública"],
+      "notes": "Usar estritamente campos publicados no cadastro oficial CETESB; zero dados de proprietários privados ou laudos não públicos."
+    },
+    {
+      "gap_id": "GAP-CS-002",
+      "program": "contaminated-sites",
+      "domain": "soil_contaminated_sites",
+      "status": "open",
+      "priority": 2,
+      "country_iso2": "US",
+      "region": "California, United States",
+      "title": "US EPA Superfund (SEMS) Public Site Record — California",
+      "target_file": "contributions/US/epa-superfund-california-site.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "US EPA (Superfund / SEMS)",
+          "official_url": "https://www.epa.gov/superfund",
+          "expected_license": "U.S. Federal Public Domain"
+        }
+      ],
+      "expected_parameters": ["Public EPA Site ID", "NPL Status", "Published Contaminants of Concern (with <LQ when applicable)"],
+      "notes": "Only official public EPA Superfund records; do not include private individual names or contacts."
+    },
+    {
+      "gap_id": "GAP-CE-001",
+      "program": "climate-emissions",
+      "domain": "climate_emissions",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "BR",
+      "region": "Amazônia Legal / Cerrado, Brasil",
+      "title": "Indicadores Climáticos e Focos Públicos — INPE TerraBrasilis e INMET",
+      "target_file": "contributions/BR/clima-queimadas-inpe-inmet.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "INPE (TerraBrasilis / BDQueimadas)",
+          "official_url": "https://terrabrasilis.dpi.inpe.br",
+          "expected_license": "Dados Abertos Governamentais (LAI / CC BY 4.0)"
+        },
+        {
+          "agency": "INMET (BDMEP)",
+          "official_url": "https://bdmep.inmet.gov.br",
+          "expected_license": "Dados Abertos Governamentais (LAI)"
+        }
+      ],
+      "expected_parameters": ["Precipitação acumulada (mm)", "Temperatura média (°C)", "Contagem pública agregada de focos"],
+      "notes": "Informar código WMO ou recorte espacial público oficial."
+    },
+    {
+      "gap_id": "GAP-BB-001",
+      "program": "biomes-biodiversity",
+      "domain": "biodiversity_forests",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "BR",
+      "region": "Amazônia / Mata Atlântica — Monitoramento Aberto de Florestas",
+      "title": "Cobertura Florestal e Dinâmica de Uso da Terra — Copernicus / MapBiomas / INPE",
+      "target_file": "contributions/BR/florestas-copernicus-mapbiomas.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "Copernicus (C3S / Land Monitoring Service)",
+          "official_url": "https://climate.copernicus.eu",
+          "expected_license": "Copernicus Free, Full and Open Data Policy"
+        },
+        {
+          "agency": "MapBiomas",
+          "official_url": "https://brasil.mapbiomas.org",
+          "expected_license": "CC BY 4.0"
+        }
+      ],
+      "expected_parameters": ["Área florestal (ha)", "Taxa anual de variação (%)", "Classe de cobertura do solo"],
+      "notes": "Preservar atribuição obrigatória do Copernicus ou da coleção MapBiomas utilizada."
+    },
+    {
+      "gap_id": "GAP-BB-002",
+      "program": "biomes-biodiversity",
+      "domain": "biodiversity_forests",
+      "status": "open",
+      "priority": 2,
+      "country_iso2": "DE",
+      "region": "Central Europe Forest & Biodiversity Reference (Copernicus / GBIF)",
+      "title": "European Forest & Open Biodiversity Baseline — Copernicus & GBIF (CC0/CC BY)",
+      "target_file": "contributions/DE/europe-copernicus-gbif-forest-baseline.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "GBIF (Global Biodiversity Information Facility)",
+          "official_url": "https://www.gbif.org",
+          "expected_license": "CC0 1.0 / CC BY 4.0 (strictly exclude CC BY-NC)"
+        },
+        {
+          "agency": "Copernicus Atmosphere / Climate",
+          "official_url": "https://atmosphere.copernicus.eu",
+          "expected_license": "Copernicus Free, Full and Open Data Policy"
+        }
+      ],
+      "expected_parameters": ["Species richness index (CC0/CC BY subset)", "Tree cover density (%)"],
+      "notes": "Strictly filter GBIF exports to CC0 or CC BY 4.0; never include CC BY-NC subsets."
+    },
+    {
+      "gap_id": "GAP-SW-001",
+      "program": "sanitation-waste",
+      "domain": "waste_sanitation",
+      "status": "open",
+      "priority": 1,
+      "country_iso2": "BR",
+      "region": "Brasil — Recorte Municipal ou Estadual Público",
+      "title": "Indicadores Públicos de Resíduos Sólidos e Saneamento — SINIR / SINISA",
+      "target_file": "contributions/BR/residuos-saneamento-sinir-sinisa.ecbt.json",
+      "recommended_sources": [
+        {
+          "agency": "MMA (SINIR — Sistema Nacional de Informações sobre a Gestão dos Resíduos Sólidos)",
+          "official_url": "https://sinir.gov.br",
+          "expected_license": "Dados Abertos Governamentais (LAI)"
+        },
+        {
+          "agency": "Ministério das Cidades (SINISA)",
+          "official_url": "https://www.gov.br/cidades/pt-br/acesso-a-informacao/acoes-e-programas/saneamento/sinisa",
+          "expected_license": "Dados Abertos Governamentais (LAI)"
+        }
+      ],
+      "expected_parameters": ["Taxa de coleta seletiva (%)", "Destinação ambientalmente adequada (t/ano)", "Índice de atendimento de esgoto (%)"],
+      "notes": "Utilizar exclusivamente indicadores públicos agregados por município ou estado, sem qualquer dado pessoal."
+    }
+  ]
+}

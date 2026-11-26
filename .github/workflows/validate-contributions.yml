@@ -1,4 +1,4 @@
-name: Validate Public Contributions
+name: Validate Public Contributions (Single Deterministic Judge)
 
 on:
   pull_request:
@@ -12,8 +12,8 @@ permissions:
   contents: read
 
 jobs:
-  validate:
-    name: Validate .ecbt.json contributions & tests
+  judge:
+    name: Fail-closed judge (< 2s, zero GPU, zero npm install)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -24,8 +24,14 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Validate all contribution files
-        run: node scripts/validate_contribution.mjs
+      - name: Verify harness setup
+        run: node tools/oedt.mjs setup
 
-      - name: Run validator unit tests
-        run: node --test tests/validate_contribution.test.mjs
+      - name: Run single deterministic fail-closed judge
+        run: node tools/oedt.mjs check
+
+      - name: Print transparent Global Program Board
+        run: node tools/oedt.mjs board
+
+      - name: Run validator and harness unit tests
+        run: node --test tests/validate_contribution.test.mjs tests/oedt_harness.test.mjs

@@ -30,7 +30,9 @@ Todo arquivo é validado automaticamente por `scripts/validate_contribution.mjs`
 | `author` | `object` | Sim | Créditos do contribuidor (`github_handle`, `display_name`, `ecbyts_app_verified`), **sem PII**. |
 | `observations` | `array` | Sim | Lista não vazia de observações ambientais estruturadas com suporte explícito a `<LQ`. |
 | `disclaimer_public_data_only` | `boolean` | Sim | Deve ser estritamente `true`. |
-| `is_template_example` | `boolean` | Não | Omitir ou usar `false` em contribuições reais. Reservado (`true`) apenas para o arquivo-modelo didático do repositório. |
+| `program` | `string` | Recomendado | Um dos 6 Programs oficiais de `desk/gaps.json`: `water-basins`, `air-quality`, `contaminated-sites`, `climate-emissions`, `biomes-biodiversity`, `sanitation-waste` (deve casar com `domain`). |
+| `gap_id` | `string` | Recomendado | Identificador da lacuna em `desk/gaps.json` no formato `GAP-XX-NNN` (regra `1 arquivo = 1 lacuna` sem duplicidade). |
+| `is_template_example` | `boolean` | Não | Omitir ou usar `false` em contribuições reais. Reservado (`true`) apenas para o arquivo-modelo didático do repositório (nunca contabilizado no placar). |
 
 ---
 
@@ -69,19 +71,23 @@ Todo arquivo é validado automaticamente por `scripts/validate_contribution.mjs`
 - `license`: deve informar uma licença aberta compatível (Domínio Público, `CC0`, `CC BY 4.0`, `ODC-By`, `ODbL`, `Dados Abertos`, `LAI`, `OGL`, `Copernicus Open Data`, `INSPIRE`, `MIT`, `PDDL`). **Licenças `CC BY-NC`, proprietárias, fechadas ou confidenciais são rejeitadas automaticamente.**
 - `retrieved_at_utc`: data/hora ISO-8601 válida em UTC (ex.: `2026-11-26T15:00:00Z`).
 
-### 3.3. `author` (Crédito Público Sem PII)
+### 3.3. `author` (Crédito Público Sem PII e Transparência Humano / Agente)
 
 ```json
 "author": {
   "github_handle": "seu-usuario-github",
   "display_name": "Nome de Exibição no Hall of Fame",
-  "ecbyts_app_verified": true
+  "ecbyts_app_verified": true,
+  "contributor_mode": "human",
+  "agent_runtime": "opcional: claude-code | codex | antigravity | gemini | cursor | deepseek"
 }
 ```
 
 - `github_handle`: identificador público válido do GitHub (sem `@`).
 - `display_name`: nome ou equipe que aparecerá no `HALL_OF_FAME.md` e no Certificado Digital com Selo QR.
 - `ecbyts_app_verified`: `true` quando o modelo foi montado e validado gratuitamente em `https://ecbyts.com/app` (ou `false` caso submetido diretamente via esquema JSON aberto para posterior conferência).
+- `contributor_mode` (opcional, padrão `"human"`): `"human"` ou `"human_plus_ai_agent"`, exibido de forma transparente em `node tools/oedt.mjs board`.
+- `agent_runtime` (opcional): nome curto do agente utilizado quando `contributor_mode` for `"human_plus_ai_agent"`.
 - **Nunca inserir e-mail pessoal, telefone, CPF ou endereço residencial.**
 
 ### 3.4. `observations` e Suporte Explícito a `<LQ` (`below_detection_limit`)

@@ -7,55 +7,92 @@
 <a id="português-brasil"></a>
 ## Português (Brasil)
 
-### Objetivo
+### Muitos Agentes e Humanos, Um Único Juiz
 
-Construir de forma aberta, auditável e colaborativa o primeiro **Gêmeo Digital Ambiental Mundial** estruturado com **100% de dados públicos oficiais** de bacias hidrográficas, qualidade do ar, áreas contaminadas públicas, clima e emissões, biodiversidade/florestas e resíduos/saneamento.
+Construir de forma aberta, auditável e colaborativa o primeiro **Gêmeo Digital Ambiental Mundial** com **100% de dados públicos oficiais**, permitindo que qualquer pessoa participe pelo navegador em [https://ecbyts.com/app](https://ecbyts.com/app) ou conecte seu próprio agente de IA (`Claude`, `Codex`, `Antigravity`, `Gemini`, `Cursor`, `DeepSeek`) diante de **um único juiz determinístico fail-closed** (`< 2s`, zero dependências externas, zero GPU).
 
-Cada contribuição aprovada integra um acervo técnico padronizado no formato aberto `.ecbt.json`, com proveniência pública verificável, coordenadas geográficas reais e preservação integral de parâmetros abaixo do limite de quantificação (`<LQ`).
+### Conecte Seu Próprio Agente — Copie Uma Linha e Participe
 
-### Aviso Fundamental (Natureza 100% Gratuita e Sem Premiação Financeira)
+```bash
+node tools/oedt.mjs setup && node tools/oedt.mjs next
+```
 
-- **Participação 100% gratuita:** não há taxa de inscrição, mensalidade ou obrigatoriedade de contratação de planos pagos.
-- **Reconhecimento público + certificado digital verificável:** o desafio é focado exclusivamente em **reconhecimento técnico público** (listagem no `HALL_OF_FAME.md`) e na emissão de **Certificado Digital Verificável com Selo QR** hospedado em `https://ecbyts.com`.
-- **Sem premiação monetária:** não há prêmios em dinheiro, brindes pagos ou concessão de cursos gratuitos vinculados a este regulamento.
-- **Somente dados públicos abertos:** é estritamente proibido enviar dados privados, laudos de clientes, informações confidenciais, dados pessoais (PII) ou bases sob licença restritiva ou não-comercial (`CC BY-NC`).
+Fluxo completo sem conflito de merge (`1 arquivo = 1 lacuna`):
 
-### Como Participar em 3 Passos
+```text
+setup  ->  next  ->  ecbyts.com/app  ->  check  ->  Pull Request (1 lacuna)
+```
 
-1. **Escolha um dado público oficial:** consulte [CATALOG_PUBLIC_SOURCES.md](CATALOG_PUBLIC_SOURCES.md) e selecione uma estação, série ou registro público oficial (água, ar, solo público, clima, biodiversidade ou saneamento) com URL institucional `https://` verificável e licença aberta compatível.
-2. **Monte e valide gratuitamente no `ecbyts.com/app`:** abra gratuitamente a aplicação web aberta em [https://ecbyts.com/app](https://ecbyts.com/app), estruture e valide o seu gêmeo digital ambiental com os dados públicos escolhidos e gere o arquivo aberto no formato `.ecbt` / `.ecbt.json` seguindo o contrato em [SCHEMA_CONTRIBUTION.md](SCHEMA_CONTRIBUTION.md).
-3. **Envie via Pull Request:** salve sua contribuição em `contributions/<PAIS_ISO2>/<slug>.ecbt.json`, valide localmente com `node scripts/validate_contribution.mjs` e abra um Pull Request seguindo [CONTRIBUTING.md](CONTRIBUTING.md).
+1. **`node tools/oedt.mjs setup`** — verifica o Node.js 20+, o contrato do esquema, o Desk de lacunas, o Graveyard e a prontidão do juiz.
+2. **`node tools/oedt.mjs next [--program <prog>]`** — consulta `desk/gaps.json` e devolve a próxima lacuna aberta do mapa mundial (`open`) com fontes públicas oficiais sugeridas e caminho alvo exclusivo.
+3. **`https://ecbyts.com/app`** — monte e valide gratuitamente seu gêmeo digital ambiental no navegador com dados públicos oficiais (preservando `<LQ` / `below_detection_limit`), exportando o arquivo aberto `.ecbt` / `.ecbt.json`.
+4. **`node tools/oedt.mjs check <arquivo>`** — executa o único juiz determinístico fail-closed (valida esquema, URL `https://`, licença aberta compatível, bloqueio de PII/dados privados, isolamento `1 arquivo = 1 lacuna` e gera o **SHA-256 canônico da evidência**).
+5. **Pull Request** — envie apenas o seu arquivo `contributions/<PAIS_ISO2>/<slug>.ecbt.json` seguindo `.github/PULL_REQUEST_TEMPLATE.md`.
+
+### Aviso Fundamental (100% Gratuito, Sem Prêmio em Dinheiro e Somente Dados Públicos)
+
+- **100% gratuito:** sem taxa de inscrição, mensalidade ou exigência de plano comercial.
+- **Reconhecimento público + Certificado Digital Verificável (Selo QR):** foco exclusivo em listagem no [HALL_OF_FAME.md](HALL_OF_FAME.md), placar aberto (`node tools/oedt.mjs board`) e **Certificado Digital Verificável com Selo QR** hospedado em `https://ecbyts.com`.
+- **Sem premiação monetária:** não há prêmios em dinheiro, brindes pagos ou cursos gratuitos vinculados a este regulamento.
+- **Somente dados públicos abertos:** é estritamente proibido enviar dados privados, laudos de clientes, PII ou licenças fechadas / não-comerciais (`CC BY-NC`).
+
+### Os 6 Programs e o Placar Transparente ("Who Is Counted")
+
+Execute `node tools/oedt.mjs board` para ver em tempo real o estado das lacunas nos **6 Programs globais** (`desk/gaps.json`):
+
+| Program (`--program`) | Domínio Canônico | Foco Público |
+| --- | --- | --- |
+| `water-basins` | `water_basins` | Bacias hidrográficas e qualidade das águas (ANA, CETESB, USGS, EEA) |
+| `air-quality` | `air_quality` | Estações oficiais de qualidade do ar (QUALAR, MonitorAr, OpenAQ, EPA, EEA) |
+| `contaminated-sites` | `soil_contaminated_sites` | Cadastros públicos oficiais de áreas contaminadas e solos (CETESB, EPA Superfund, ISRIC) |
+| `climate-emissions` | `climate_emissions` | Clima, queimadas e inventários abertos (INPE, INMET, Copernicus, NASA, NOAA) |
+| `biomes-biodiversity` | `biodiversity_forests` | Florestas, uso do solo e biodiversidade aberta CC0/CC BY (Copernicus, MapBiomas, GBIF) |
+| `sanitation-waste` | `waste_sanitation` | Indicadores públicos agregados de saneamento e resíduos (SINIR, SINISA, Eurostat, EPA) |
+
+- **Regra "Who is counted":** apenas unidades em estado **`checked`** (aprovadas pelo juiz determinístico e integradas em `main`, nunca o arquivo didático `is_template_example: true`) entram na contagem do placar e dos certificados. O placar distingue explicitamente **`Human`** vs **`Human + AI Agent`**.
+- **The Graveyard (`graveyard/`):** registro público de fontes mortas (`dead_source`), licenças bloqueadas (`CC BY-NC`) e unidades refutadas (`refuted`), evitando retrabalho de humanos e agentes.
+- **Structured Feed (`feed/events.jsonl`):** log append-only das mudanças reais de estado (`gap_opened`, `unit_checked`, `unit_refuted`, `source_buried`).
+- **Arquitetura anti-gargalo de CI:** detalhada em [HARNESS_ARCHITECTURE.md](HARNESS_ARCHITECTURE.md).
 
 ### Níveis de Reconhecimento e Certificado Digital com Selo QR
 
-Todas as contribuições aprovadas na revisão técnica automática e humana passam a compor o [HALL_OF_FAME.md](HALL_OF_FAME.md) e habilitam a emissão de **Certificado Digital Verificável com Selo QR** em `https://ecbyts.com`, permitindo conferência pública da autoria, dos registros aceitos e do nível alcançado:
-
-| Nível | Critério | Reconhecimento |
+| Nível | Critério (`checked`) | Reconhecimento |
 | --- | --- | --- |
-| **Explorador Ambiental** | 1 contribuição pública aprovada | Nome no Hall of Fame + Certificado Digital Verificável (Selo QR) |
-| **Cartógrafo de Dados Públicos** | 3 ou mais contribuições aprovadas (ou 2+ domínios ambientais) | Destaque temático no Hall of Fame + Certificado Nível Cartógrafo (Selo QR) |
-| **Guardião de Bacia/Bioma** | 5 ou mais contribuições integradas em uma bacia hidrográfica, aquífero ou bioma | Selo de Curadoria Territorial + Certificado Nível Guardião (Selo QR) |
-| **Embaixador Global** | 10 ou mais contribuições em múltiplas regiões/países ou revisão técnica comunitária recorrente | Destaque Global no Hall of Fame + Certificado Nível Embaixador (Selo QR) |
+| **Explorador Ambiental** | 1 contribuição pública aprovada | Hall of Fame + Certificado Digital Verificável (Selo QR) |
+| **Cartógrafo de Dados Públicos** | 3+ contribuições aprovadas ou 2+ Programs | Destaque temático + Certificado Nível Cartógrafo (Selo QR) |
+| **Guardião de Bacia/Bioma** | 5+ contribuições integradas em uma bacia/aquífero/bioma | Selo Territorial + Certificado Nível Guardião (Selo QR) |
+| **Embaixador Global** | 10+ contribuições multi-região ou revisão comunitária recorrente | Destaque Global + Certificado Nível Embaixador (Selo QR) |
 
 ### Estrutura do Repositório
 
 ```text
 open-earth-digital-twin/
-├── README.md                                        # Visão geral bilíngue (PT-BR + EN)
-├── RULES.md                                         # Regulamento oficial completo do desafio
-├── CATALOG_PUBLIC_SOURCES.md                        # Catálogo de fontes públicas (Brasil e Mundo)
-├── SCHEMA_CONTRIBUTION.md                           # Contrato técnico do arquivo .ecbt.json
-├── CONTRIBUTING.md                                  # Guia passo a passo de contribuição via PR
-├── HALL_OF_FAME.md                                  # Quadro de reconhecimento e níveis do Selo QR
-├── LICENSE                                          # Licença MIT (scripts, schemas e documentação)
-├── DATA_LICENSE.md                                  # Licença ODC-By 1.0 (acervo de contribuições)
+├── README.md                              # Visão geral bilíngue (PT-BR + EN)
+├── HARNESS_ARCHITECTURE.md                # Arquitetura do juiz único, Programs, Graveyard e anti-gargalo CI
+├── RULES.md                               # Regulamento oficial completo do desafio
+├── CATALOG_PUBLIC_SOURCES.md              # Catálogo de fontes públicas (Brasil e Mundo)
+├── SCHEMA_CONTRIBUTION.md                 # Contrato técnico do arquivo .ecbt.json
+├── CONTRIBUTING.md                        # Guia passo a passo de contribuição via PR
+├── HALL_OF_FAME.md                        # Quadro de reconhecimento e níveis do Selo QR
+├── LICENSE                                # Licença MIT (scripts, CLI, schemas e documentação)
+├── DATA_LICENSE.md                        # Licença ODC-By 1.0 (acervo de contribuições)
+├── desk/
+│   └── gaps.json                          # 6 Programs e 12 lacunas iniciais abertas (Brasil + Mundo)
+├── graveyard/
+│   ├── README.md                          # Política do Cemitério de fontes mortas e unidades refutadas
+│   └── index.json                         # Índice estruturado consultado automaticamente pelo harness
+├── feed/
+│   └── events.jsonl                       # Feed append-only estruturado de eventos reais
+├── tools/
+│   └── oedt.mjs                           # CLI unificada zero-dependências (setup / next / check / board)
+├── scripts/
+│   └── validate_contribution.mjs          # Juiz determinístico fail-closed (< 2s, zero GPU)
 ├── contributions/
 │   └── BR/
 │       └── exemplo-bacia-tiete-estacao-publica.ecbt.json
-├── scripts/
-│   └── validate_contribution.mjs                    # Validador Node.js puro (zero dependências)
 ├── tests/
-│   └── validate_contribution.test.mjs               # Suíte automatizada de testes (node --test)
+│   ├── validate_contribution.test.mjs     # Testes do juiz (node --test)
+│   └── oedt_harness.test.mjs              # Testes do harness CLI (setup / next / check / board)
 └── .github/
     ├── PULL_REQUEST_TEMPLATE.md
     ├── ISSUE_TEMPLATE/nova-contribuicao.yml
@@ -64,50 +101,48 @@ open-earth-digital-twin/
 
 ### Validação Local Rápida
 
-Requer apenas Node.js 20+ (sem instalação de pacotes externos):
-
 ```bash
-node scripts/validate_contribution.mjs
-node --test tests/validate_contribution.test.mjs
+node tools/oedt.mjs setup
+node tools/oedt.mjs next
+node tools/oedt.mjs check
+node tools/oedt.mjs board
+node --test tests/validate_contribution.test.mjs tests/oedt_harness.test.mjs
 ```
 
 ### Nota de Independência e Higiene de Marcas (PI-01)
 
-As instituições públicas, agências reguladoras e iniciativas científicas abertas citadas neste repositório — incluindo ANA, IBAMA, INPE, CETESB, MapBiomas, OpenAQ, Copernicus, EEA, EPA, USGS, GBIF e NASA Earthdata — são **fontes públicas independentes**. Sua citação serve exclusivamente para orientação de acesso a dados oficiais abertos e **não implica parceria formal, patrocínio, certificação ou endosso** dessas organizações em relação à ECBYTS Ltda ou a este desafio.
+As instituições públicas e observatórios científicos citados neste repositório — incluindo ANA, IBAMA, INPE, CETESB, MapBiomas, OpenAQ, Copernicus, EEA, EPA, USGS, GBIF e NASA Earthdata — são **fontes públicas independentes**. Da mesma forma, a referência às boas práticas abertas de colaboração verificável adotadas em projetos como `https://pequalnp.com/` tem finalidade estritamente técnica e educativa. Nenhuma menção neste repositório implica parceria formal, patrocínio, certificação ou endosso dessas organizações em relação à ECBYTS Ltda.
 
 ---
 
 <a id="english"></a>
 ## English
 
-### Goal
+### Many Agents & Humans, One Judge
 
-Build, in an open, auditable, and collaborative way, the first **Global Environmental Digital Twin** powered **100% by official open public data** across watersheds and water quality, air quality, public contaminated sites, climate and emissions, biodiversity and forests, and waste and sanitation.
+Build the first collaborative **Global Environmental Digital Twin** powered **100% by official open public data**. Contribute via your browser at [https://ecbyts.com/app](https://ecbyts.com/app) or connect your own AI agent (`Claude`, `Codex`, `Antigravity`, `Gemini`, `Cursor`, `DeepSeek`) against **one deterministic fail-closed judge** (`< 2s`, zero external dependencies, zero GPU).
 
-Every approved contribution joins a standardized open repository in `.ecbt.json` format with verifiable public provenance, valid WGS84 coordinates, and explicit analytical support for below-quantification-limit measurements (`<LQ`).
+### Connect Your Own Agent — Copy One Line and Join
+
+```bash
+node tools/oedt.mjs setup && node tools/oedt.mjs next
+```
+
+Zero-conflict workflow (`1 file = 1 gap`):
+
+```text
+setup  ->  next  ->  ecbyts.com/app  ->  check  ->  Pull Request (1 gap)
+```
+
+1. **`node tools/oedt.mjs setup`** — verifies Node.js 20+, schema, Desk, Graveyard, Feed, and judge health.
+2. **`node tools/oedt.mjs next [--program <prog>]`** — picks the next `open` global gap from `desk/gaps.json` across **6 Programs** (`water-basins`, `air-quality`, `contaminated-sites`, `climate-emissions`, `biomes-biodiversity`, `sanitation-waste`).
+3. **`https://ecbyts.com/app`** — assemble and validate your public environmental digital twin for free in the browser (preserving `<LQ` / `below_detection_limit`) and export `.ecbt.json`.
+4. **`node tools/oedt.mjs check <file>`** — runs the single fail-closed judge (schema, HTTPS official URL, open license check blocking `CC BY-NC`, PII blocker, 1-file-per-gap isolation, and canonical SHA-256 evidence digest).
+5. **`node tools/oedt.mjs board`** — prints transparent per-Program status (`open / claimed / checked / refuted / dead_source`) and **"Who is counted"** (`Human` vs `Human + AI Agent`; only judge-verified `checked` units count).
 
 ### Core Notice (100% Free, Zero Monetary Prizes, Public Data Only)
 
-- **100% free participation:** no entry fee, no subscription, and no paid plan required.
-- **Public recognition and verifiable QR certificate only:** this challenge focuses exclusively on **public recognition** in [HALL_OF_FAME.md](HALL_OF_FAME.md) and a **Verifiable Digital Certificate with a QR Seal** hosted on `https://ecbyts.com`.
-- **No cash prizes or paid giveaways:** there are no monetary awards, paid gifts, or free course vouchers attached to these rules.
-- **Strict public-data boundary:** private corporate data, client laboratory reports, confidential files, personal identifiable information (PII), and closed or non-commercial (`CC BY-NC`) datasets are strictly prohibited and automatically rejected.
-
-### How to Participate in 3 Steps
-
-1. **Select an official public dataset:** pick a verifiable public monitoring station, registry, or inventory from [CATALOG_PUBLIC_SOURCES.md](CATALOG_PUBLIC_SOURCES.md) with an official `https://` URL and a compatible open license.
-2. **Build and validate for free on `ecbyts.com/app`:** open the free web editor at [https://ecbyts.com/app](https://ecbyts.com/app), assemble and validate your environmental digital twin using the public dataset, and export your `.ecbt` / `.ecbt.json` contribution conforming to [SCHEMA_CONTRIBUTION.md](SCHEMA_CONTRIBUTION.md).
-3. **Submit a Pull Request:** add your file under `contributions/<COUNTRY_ISO2>/<slug>.ecbt.json`, verify locally with `node scripts/validate_contribution.mjs`, and open a Pull Request following [CONTRIBUTING.md](CONTRIBUTING.md).
-
-### Recognition Tiers & Verifiable QR Certificate
-
-Approved contributors are listed in [HALL_OF_FAME.md](HALL_OF_FAME.md) and earn a **Verifiable Digital Certificate with QR Seal** on `https://ecbyts.com`:
-
-1. **Environmental Explorer** (`Explorador Ambiental`) — 1 approved public contribution.
-2. **Public Data Cartographer** (`Cartógrafo de Dados Públicos`) — 3+ approved contributions or 2+ environmental domains.
-3. **Basin & Biome Guardian** (`Guardião de Bacia/Bioma`) — 5+ curated contributions across a watershed, aquifer, or biome.
-4. **Global Ambassador** (`Embaixador Global`) — 10+ multi-region/multi-country contributions or sustained community technical review.
-
-### Trademark & Independence Notice (PI-01)
-
-Public agencies and open-science initiatives referenced in this repository — including ANA, IBAMA, INPE, CETESB, MapBiomas, OpenAQ, Copernicus, EEA, EPA, USGS, GBIF, and NASA Earthdata — are **independent public data sources**. Listing them guides contributors to official open portals and **does not imply any formal partnership, sponsorship, certification, or endorsement** of ECBYTS Ltda or this initiative.
+- **100% free:** no fees, subscriptions, or paid plans required.
+- **Public recognition & verifiable QR certificate only:** approved contributors are recognized in [HALL_OF_FAME.md](HALL_OF_FAME.md) and earn a **Verifiable Digital Certificate with QR Seal** on `https://ecbyts.com` (4 tiers: *Environmental Explorer*, *Public Data Cartographer*, *Basin & Biome Guardian*, *Global Ambassador*). **Zero cash prizes, paid gifts, or free course vouchers.**
+- **The Graveyard (`graveyard/`) & Structured Feed (`feed/events.jsonl`):** prevents duplicate effort on dead/closed sources or refuted submissions, with append-only state logging.
+- **PI-01 Independence Notice:** Public agencies (ANA, IBAMA, INPE, CETESB, MapBiomas, OpenAQ, Copernicus, EEA, EPA, USGS, GBIF, NASA Earthdata) are independent public data sources, and `https://pequalnp.com/` is referenced solely as an independent open technical inspiration for collaborative verification harnesses — with no formal partnership, sponsorship, certification, or endorsement of ECBYTS Ltda.

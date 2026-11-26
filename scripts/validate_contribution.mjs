@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 /**
- * Open Earth Digital Twin — Contribution Validator (Zero-Dependency Node.js ESM)
+ * Open Earth Digital Twin — Single Deterministic Fail-Closed Judge (Zero-Dependency Node.js ESM)
  *
- * Validates all `contributions/**\/*.ecbt.json` files (or explicitly passed paths) for:
- *  - Required schema metadata & canonical environmental domain
+ * Validates `contributions/**\/*.ecbt.json` files (or explicitly passed paths) in < 2s without GPU:
+ *  - Required schema metadata, canonical environmental domain, optional Program & Gap ID
  *  - Valid WGS84 coordinates within globe bounds
  *  - Verifiable public HTTPS source URL & open-data compatible license (blocks CC BY-NC / closed)
  *  - Explicit analytical handling of <LQ (below_detection_limit)
  *  - Strict blocking of PII (CPF, SSN, personal email, phone) & private/confidential terms
  *  - Explicit `disclaimer_public_data_only: true`
+ *  - Canonical deterministic SHA-256 evidence digest & 1-file-per-gap isolation checks
  */
 
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -24,8 +26,29 @@ export const VALID_DOMAINS = new Set([
   "waste_sanitation",
 ]);
 
+export const VALID_PROGRAMS = new Set([
+  "water-basins",
+  "air-quality",
+  "contaminated-sites",
+  "climate-emissions",
+  "biomes-biodiversity",
+  "sanitation-waste",
+]);
+
+export const PROGRAM_TO_DOMAIN = Object.freeze({
+  "water-basins": "water_basins",
+  "air-quality": "air_quality",
+  "contaminated-sites": "soil_contaminated_sites",
+  "climate-emissions": "climate_emissions",
+  "biomes-biodiversity": "biodiversity_forests",
+  "sanitation-waste": "waste_sanitation",
+});
+
+export const VALID_CONTRIBUTOR_MODES = new Set(["human", "human_plus_ai_agent"]);
+
 const ISO2_RE = /^[A-Z]{2}$/;
 const KEBAB_ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const GAP_ID_RE = /^GAP-[A-Z]{2}-\d{3}$/;
 const GITHUB_HANDLE_RE = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?$/;
 
 const FORBIDDEN_LICENSE_PATTERNS = [
@@ -38,7 +61,7 @@ const FORBIDDEN_LICENSE_PATTERNS = [
 ];
 
 const ALLOWED_OPEN_LICENSE_RE =
-  /\b(cc0|cc[\s-]*by(?:[\s-]*sa)?(?:\s*4\.0|\s*3\.0)?|odc[\s-]*by|odbl|pddl|public\s+domain|dominio\s+publico|dados\s+abertos|lai|open\s+government\s+licen[cs]e|ogl|copernicus|inspire|nasa\s+open\s+data|mit|apache[\s-]*2\.0|bsd)\b/i;
+  /\b(cc0|cc[\s-]*by(?:[\s-]*sa)?(?:\s*4\.0|\s*3\.0)?|odc[\s-]*by|odbl|pddl|public\s+domain|dominio\s+publico|dados\s+abertos|dados\s+publicos|lai|open\s+government\s+licen[cs]e|ogl|copernicus|inspire|nasa\s+open\s+data|mit|apache[\s-]*2\.0|bsd)\b/i;
 
 const EMAIL_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/;
 const CPF_FORMATTED_RE = /\b\d{3}\.\d{3}\.\d{3}-\d{2}\b/;
@@ -61,6 +84,29 @@ function isPlainObject(value) {
 
 function isNonEmptyString(value) {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+function canonicalizeJson(value) {
+  if (Array.isArray(value)) {
+    return `[${value.map((item) => canonicalizeJson(item)).join(",")}]`;
+  }
+  if (isPlainObject(value)) {
+    const keys = Object.keys(value).sort();
+    return `{${keys
+      .map((key) => `${JSON.stringify(key)}:${canonicalizeJson(value[key])}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+/**
+ * Computes a deterministic canonical SHA-256 digest of a contribution object.
+ * @param {unknown} data
+ * @returns {string}
+ */
+export function computeCanonicalEvidenceSha256(data) {
+  const canonical = canonicalizeJson(data);
+  return crypto.createHash("sha256").update(canonical, "utf8").digest("hex");
 }
 
 function isValidPublicHttpsUrl(raw) {
@@ -143,8 +189,12 @@ function scanValueRecursive(value, jsonPath, errors) {
 /**
  * Validates a parsed `.ecbt.json` contribution object.
  * @param {unknown} data
- * @param {{ expectedCountryDir?: string }} [options]
- * @returns {{ valid: boolean, errors: string[] }}
+ * @param {{
+ *   expectedCountryDir?: string,
+ *   knownGapsById?: Map<string, any>,
+ *   deadSourceUrls?: Set<string>
+ * }} [options]
+ * @returns {{ valid: boolean, errors: string[], evidenceSha256?: string }}
  */
 export function validateContributionObject(data, options = {}) {
   const errors = [];
@@ -184,6 +234,51 @@ export function validateContributionObject(data, options = {}) {
     errors.push(
       `Invalid "domain": must be one of [${[...VALID_DOMAINS].join(", ")}].`,
     );
+  }
+
+  // Optional harness metadata: program & gap_id
+  if (data.program !== undefined) {
+    if (!isNonEmptyString(data.program) || !VALID_PROGRAMS.has(data.program)) {
+      errors.push(
+        `Invalid "program": must be one of [${[...VALID_PROGRAMS].join(", ")}].`,
+      );
+    } else if (
+      VALID_DOMAINS.has(data.domain) &&
+      PROGRAM_TO_DOMAIN[data.program] !== data.domain
+    ) {
+      errors.push(
+        `Program/domain mismatch: program "${data.program}" requires domain "${PROGRAM_TO_DOMAIN[data.program]}" (got "${data.domain}").`,
+      );
+    }
+  }
+
+  if (data.gap_id !== undefined) {
+    if (!isNonEmptyString(data.gap_id) || !GAP_ID_RE.test(data.gap_id)) {
+      errors.push(
+        'Invalid "gap_id": must match format GAP-XX-NNN (e.g. "GAP-WB-001").',
+      );
+    } else if (options.knownGapsById) {
+      const gap = options.knownGapsById.get(data.gap_id);
+      if (!gap) {
+        errors.push(`Unknown "gap_id" "${data.gap_id}": not registered in desk/gaps.json.`);
+      } else {
+        if (gap.domain && data.domain && gap.domain !== data.domain) {
+          errors.push(
+            `Gap domain mismatch: "${data.gap_id}" expects domain "${gap.domain}" (got "${data.domain}").`,
+          );
+        }
+        if (gap.program && data.program && gap.program !== data.program) {
+          errors.push(
+            `Gap program mismatch: "${data.gap_id}" expects program "${gap.program}" (got "${data.program}").`,
+          );
+        }
+        if (gap.status === "dead_source") {
+          errors.push(
+            `Gap "${data.gap_id}" is marked "dead_source" in desk/gaps.json and cannot be submitted.`,
+          );
+        }
+      }
+    }
   }
 
   // 2. Public-data disclaimer
@@ -243,6 +338,13 @@ export function validateContributionObject(data, options = {}) {
     const urlCheck = isValidPublicHttpsUrl(official_url);
     if (!urlCheck.ok) {
       errors.push(`Invalid "source.official_url": ${urlCheck.reason}.`);
+    } else if (
+      options.deadSourceUrls &&
+      options.deadSourceUrls.has(official_url.trim().replace(/\/+$/, "").toLowerCase())
+    ) {
+      errors.push(
+        `Buried source blocked: "${official_url}" is listed in graveyard/index.json as a dead or rejected source.`,
+      );
     }
     if (data.source.secondary_reference_url !== undefined) {
       const secCheck = isValidPublicHttpsUrl(data.source.secondary_reference_url);
@@ -272,11 +374,17 @@ export function validateContributionObject(data, options = {}) {
     }
   }
 
-  // 5. Author metadata
+  // 5. Author metadata (transparent Human vs Human + AI Agent)
   if (!isPlainObject(data.author)) {
     errors.push('Missing or invalid "author" object.');
   } else {
-    const { github_handle, display_name, ecbyts_app_verified } = data.author;
+    const {
+      github_handle,
+      display_name,
+      ecbyts_app_verified,
+      contributor_mode,
+      agent_runtime,
+    } = data.author;
     if (!isNonEmptyString(github_handle) || !GITHUB_HANDLE_RE.test(github_handle)) {
       errors.push(
         'Missing or invalid "author.github_handle" (valid GitHub username without "@" required).',
@@ -287,6 +395,18 @@ export function validateContributionObject(data, options = {}) {
     }
     if (typeof ecbyts_app_verified !== "boolean") {
       errors.push('Missing or invalid "author.ecbyts_app_verified" (boolean required).');
+    }
+    if (
+      contributor_mode !== undefined &&
+      (!isNonEmptyString(contributor_mode) ||
+        !VALID_CONTRIBUTOR_MODES.has(contributor_mode))
+    ) {
+      errors.push(
+        'Optional "author.contributor_mode" must be "human" or "human_plus_ai_agent".',
+      );
+    }
+    if (agent_runtime !== undefined && !isNonEmptyString(agent_runtime)) {
+      errors.push('Optional "author.agent_runtime" must be a non-empty string when provided.');
     }
   }
 
@@ -342,15 +462,20 @@ export function validateContributionObject(data, options = {}) {
   // 7. Recursive PII & private/confidential blocker across all values
   scanValueRecursive(data, "", errors);
 
-  return { valid: errors.length === 0, errors };
+  const valid = errors.length === 0;
+  return {
+    valid,
+    errors,
+    evidenceSha256: valid ? computeCanonicalEvidenceSha256(data) : undefined,
+  };
 }
 
 /**
  * Validates a single `.ecbt.json` file on disk.
  * @param {string} filePath
- * @returns {{ filePath: string, valid: boolean, errors: string[], contributionId?: string }}
+ * @param {{ knownGapsById?: Map<string, any>, deadSourceUrls?: Set<string> }} [context]
  */
-export function validateContributionFile(filePath) {
+export function validateContributionFile(filePath, context = {}) {
   let raw;
   try {
     raw = fs.readFileSync(filePath, "utf8");
@@ -385,12 +510,26 @@ export function validateContributionFile(filePath) {
   const matchDir = normalizedPath.match(/(?:^|\/)contributions\/([A-Z]{2})\/[^/]+\.ecbt\.json$/);
   const expectedCountryDir = matchDir ? matchDir[1] : undefined;
 
-  const result = validateContributionObject(parsed, { expectedCountryDir });
+  const result = validateContributionObject(parsed, {
+    expectedCountryDir,
+    knownGapsById: context.knownGapsById,
+    deadSourceUrls: context.deadSourceUrls,
+  });
+
   return {
     filePath,
     valid: result.valid,
     errors: result.errors,
+    evidenceSha256: result.evidenceSha256,
     contributionId: isPlainObject(parsed) ? parsed.contribution_id : undefined,
+    gapId: isPlainObject(parsed) ? parsed.gap_id : undefined,
+    program: isPlainObject(parsed) ? parsed.program : undefined,
+    domain: isPlainObject(parsed) ? parsed.domain : undefined,
+    isTemplateExample: isPlainObject(parsed) && parsed.is_template_example === true,
+    contributorMode:
+      isPlainObject(parsed) && isPlainObject(parsed.author)
+        ? parsed.author.contributor_mode || "human"
+        : "human",
   };
 }
 
@@ -413,7 +552,13 @@ function collectContributionFiles(targetPath, found = []) {
   return found;
 }
 
-export function validatePaths(targets) {
+/**
+ * Validates one or more paths (directories or `.ecbt.json` files), enforcing
+ * unique `contribution_id` and `1 file = 1 gap` (`gap_id` uniqueness).
+ * @param {string[]} targets
+ * @param {{ knownGapsById?: Map<string, any>, deadSourceUrls?: Set<string> }} [context]
+ */
+export function validatePaths(targets, context = {}) {
   const files = [];
   for (const target of targets) {
     if (!fs.existsSync(target)) {
@@ -436,8 +581,9 @@ export function validatePaths(targets) {
   }
 
   const seenIds = new Map();
+  const seenGaps = new Map();
   const results = files.map((filePath) => {
-    const res = validateContributionFile(filePath);
+    const res = validateContributionFile(filePath, context);
     if (res.contributionId) {
       if (seenIds.has(res.contributionId)) {
         res.valid = false;
@@ -446,6 +592,16 @@ export function validatePaths(targets) {
         );
       } else {
         seenIds.set(res.contributionId, filePath);
+      }
+    }
+    if (res.gapId && !res.isTemplateExample) {
+      if (seenGaps.has(res.gapId)) {
+        res.valid = false;
+        res.errors.push(
+          `Unit isolation violation (1 file = 1 gap): gap_id "${res.gapId}" already claimed by ${seenGaps.get(res.gapId)}.`,
+        );
+      } else {
+        seenGaps.set(res.gapId, filePath);
       }
     }
     return res;
@@ -469,7 +625,8 @@ function runCli() {
   for (const item of report.results) {
     const rel = path.relative(repoRoot, item.filePath) || item.filePath;
     if (item.valid) {
-      console.log(`[PASS] ${rel}`);
+      const tag = item.isTemplateExample ? "[TEMPLATE-OK]" : "[PASS]";
+      console.log(`${tag} ${rel} (sha256=${item.evidenceSha256})`);
     } else {
       console.error(`[FAIL] ${rel}`);
       for (const err of item.errors) {

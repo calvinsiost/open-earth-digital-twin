@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "updated_at_utc": "2026-11-26T15:30:00Z",
+  "policy_tombstones": [
+    {
+      "id": "GY-POLICY-001",
+      "category": "incompatible_license",
+      "pattern_blocked": "CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / All Rights Reserved",
+      "reason": "Datasets restricted to non-commercial use or proprietary rights cannot enter the ODC-By 1.0 Global Environmental Digital Twin archive.",
+      "buried_at_utc": "2026-11-26T15:30:00Z"
+    },
+    {
+      "id": "GY-POLICY-002",
+      "category": "private_or_pii_source",
+      "pattern_blocked": "Private client lab PDFs, NDA audits, personal emails, CPFs, phone numbers",
+      "reason": "Submissions without verifiable public https:// provenance or containing any PII/confidential material are permanently rejected by the fail-closed judge.",
+      "buried_at_utc": "2026-11-26T15:30:00Z"
+    }
+  ],
+  "dead_sources": [],
+  "refuted_units": []
+}

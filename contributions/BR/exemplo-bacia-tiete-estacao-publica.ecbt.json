@@ -1,6 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contribution_id": "br-sp-bacia-tiete-estacao-publica-exemplo",
+  "program": "water-basins",
   "is_template_example": true,
   "title": "Exemplo Estrutural: Estação Pública na Bacia do Alto Tietê (Modelo Didático)",
   "country_iso2": "BR",
@@ -24,7 +25,8 @@
   "author": {
     "github_handle": "ecbyts-template-example",
     "display_name": "Modelo Estrutural Comunitário (Exemplo Didático)",
-    "ecbyts_app_verified": true
+    "ecbyts_app_verified": true,
+    "contributor_mode": "human"
   },
   "observations": [
     {
@@ -53,7 +55,7 @@
   "ecbyts_twin_metadata": {
     "format": "ecbt-json-open-contribution",
     "generated_with": "https://ecbyts.com/app",
-    "template_notice": "Substitua os valores sample_template_only por séries públicas oficiais reais e remova is_template_example antes de abrir Pull Request."
+    "template_notice": "Substitua os valores sample_template_only por séries públicas oficiais reais, informe gap_id de desk/gaps.json e remova is_template_example antes de abrir Pull Request."
   },
   "disclaimer_public_data_only": true
 }

@@ -1,50 +1,51 @@
 # Guia de Contribuição / Contributing Guide
 
-Obrigado pelo interesse em colaborar com o **Desafio Gratuito: Gêmeo Digital Ambiental Mundial**. Todas as contribuições são gratuitas, abertas e reconhecidas no [HALL_OF_FAME.md](HALL_OF_FAME.md) com emissão de **Certificado Digital Verificável com Selo QR** em `https://ecbyts.com` (sem premiação financeira).
+Obrigado pelo interesse em colaborar com o **Desafio Gratuito: Gêmeo Digital Ambiental Mundial**. Qualquer pessoa (pelo navegador em `https://ecbyts.com/app`) ou agente de IA conectado pelo participante (`Claude`, `Codex`, `Antigravity`, `Gemini`, `Cursor`, `DeepSeek`) pode contribuir diante de **um único juiz determinístico** (`tools/oedt.mjs check`).
+
+> **Reconhecimento 100% Público e Gratuito:** contribuições `checked` integradas em `main` são creditadas no [HALL_OF_FAME.md](HALL_OF_FAME.md) e habilitam **Certificado Digital Verificável com Selo QR** em `https://ecbyts.com`, sem premiação financeira.
 
 ---
 
-## Passo a Passo (Português)
+## Fluxo Unificado (`setup -> next -> ecbyts.com/app -> check -> PR`)
 
-### 1. Escolha um Dado Público Oficial
+### 1. Verifique o Ambiente e Pegue a Próxima Lacuna Aberta
 
-Consulte [CATALOG_PUBLIC_SOURCES.md](CATALOG_PUBLIC_SOURCES.md) e escolha uma fonte oficial verificável (`https://`) com licença aberta compatível (ex.: Domínio Público, CC0, CC BY 4.0, ODC-By, Dados Abertos Governamentais / LAI, Copernicus Open Data).
+```bash
+node tools/oedt.mjs setup
+node tools/oedt.mjs next
+# Ou filtre por Program específico:
+node tools/oedt.mjs next --program water-basins
+```
 
-> **Atenção:** Nunca envie dados privados de clientes, relatórios confidenciais, dados pessoais (CPF, e-mail, telefone) nem conjuntos licenciados sob `CC BY-NC`.
+- O comando `next` lê `desk/gaps.json`, ignora fontes enterradas em `graveyard/index.json` e devolve o caminho alvo exclusivo (`1 arquivo = 1 lacuna`), evitando conflitos de merge.
 
 ### 2. Monte e Valide Gratuitamente no `ecbyts.com/app`
 
 1. Acesse gratuitamente [https://ecbyts.com/app](https://ecbyts.com/app) no navegador.
-2. Crie o modelo ambiental com as coordenadas e parâmetros públicos escolhidos, preservando medições abaixo do limite de quantificação (`<LQ`).
-3. Exporte o arquivo aberto `.ecbt` e estruture sua contribuição conforme [SCHEMA_CONTRIBUTION.md](SCHEMA_CONTRIBUTION.md) (use `contributions/BR/exemplo-bacia-tiete-estacao-publica.ecbt.json` apenas como referência estrutural).
+2. Estruture o modelo com os dados públicos oficiais da fonte recomendada (preservando `<LQ` via `below_detection_limit: true`, `value: null` e `quantification_limit > 0`).
+3. Salve sua contribuição no caminho alvo `contributions/<COUNTRY_ISO2>/<slug>.ecbt.json`, informando `gap_id`, `program`, `author.contributor_mode` (`"human"` ou `"human_plus_ai_agent"`) e `disclaimer_public_data_only: true`.
 
-### 3. Adicione o Arquivo ao Repositório
-
-1. Faça um *fork* deste repositório e crie um ramo descritivo (ex.: `contrib/br-bacia-paranapanema-01`).
-2. Salve o arquivo em `contributions/<COUNTRY_ISO2>/<slug>.ecbt.json`.
-3. Remova `is_template_example` (ou defina como `false`) e garanta que `disclaimer_public_data_only` esteja como `true`.
-
-### 4. Valide Localmente (Zero Dependências)
-
-Com Node.js 20+ instalado, execute:
+### 3. Execute o Juiz Determinístico Localmente (`< 2s`, Zero Dependências)
 
 ```bash
-node scripts/validate_contribution.mjs
-node --test tests/validate_contribution.test.mjs
+node tools/oedt.mjs check contributions/<COUNTRY_ISO2>/<slug>.ecbt.json
+node tools/oedt.mjs board
+node --test tests/validate_contribution.test.mjs tests/oedt_harness.test.mjs
 ```
 
-A validação deve finalizar com código `0` e zero erros antes da abertura do Pull Request.
+Anote o **`evidence_sha256`** emitido pelo comando `check` para preencher o Pull Request.
 
-### 5. Abra o Pull Request
+### 4. Abra um Pull Request de Unidade Isolada (`1 Arquivo = 1 Lacuna`)
 
-Preencha integralmente o checklist do Pull Request em `.github/PULL_REQUEST_TEMPLATE.md`. O workflow automático verificará o esquema, as URLs oficiais, a licença e a ausência de PII. Após a revisão técnica humana e o *merge*, sua contribuição será contabilizada no [HALL_OF_FAME.md](HALL_OF_FAME.md).
+- Edite **apenas o seu novo arquivo** em `contributions/<COUNTRY_ISO2>/<slug>.ecbt.json`.
+- **Não edite** `desk/gaps.json`, `HALL_OF_FAME.md` ou `feed/events.jsonl` no PR (os mantenedores atualizam esses arquivos centralizados no momento do *merge*, eliminando conflitos entre contribuidores).
+- Preencha integralmente `.github/PULL_REQUEST_TEMPLATE.md`.
 
 ---
 
-## Quick Steps (English)
+## Quick Steps (English — Humans & External AI Agents)
 
-1. Pick an official open public source from [CATALOG_PUBLIC_SOURCES.md](CATALOG_PUBLIC_SOURCES.md) (`https://` URL + compatible open license; **no `CC BY-NC`, no private/client data, no PII**).
-2. Build and validate your environmental digital twin for free at [https://ecbyts.com/app](https://ecbyts.com/app) and prepare your `.ecbt.json` file following [SCHEMA_CONTRIBUTION.md](SCHEMA_CONTRIBUTION.md).
-3. Save it to `contributions/<COUNTRY_ISO2>/<slug>.ecbt.json`.
-4. Run `node scripts/validate_contribution.mjs` locally (Node.js 20+, zero dependencies).
-5. Open a Pull Request completing all checkboxes in the PR template. Approved contributions earn public recognition in [HALL_OF_FAME.md](HALL_OF_FAME.md) and a Verifiable Digital Certificate with QR Seal on `https://ecbyts.com`.
+1. Run `node tools/oedt.mjs setup && node tools/oedt.mjs next` (optionally `--program <prog>`).
+2. Build and validate the public dataset for free at [https://ecbyts.com/app](https://ecbyts.com/app) and save your `.ecbt.json` file to the target path (`1 file = 1 gap`, `disclaimer_public_data_only: true`, zero PII, zero `CC BY-NC`).
+3. Run the deterministic fail-closed judge locally: `node tools/oedt.mjs check <your-file.ecbt.json>` and record the canonical `evidence_sha256`.
+4. Open a single-file Pull Request completing `.github/PULL_REQUEST_TEMPLATE.md`. Only judge-verified `checked` units merged to `main` count on `board`, `HALL_OF_FAME.md`, and `ecbyts.com` QR Certificates.
